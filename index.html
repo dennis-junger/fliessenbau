@@ -74,8 +74,8 @@
       --dur: .5s;
 
       /* Eintritts-Animation */
-      --reveal-dur: .7s;
-      --reveal-stagger: 70ms;
+      --reveal-dur: .45s;
+      --reveal-stagger: 55ms;
     }
 
     * { box-sizing: border-box; }
@@ -173,7 +173,9 @@
       color: var(--clay); margin-top: 5px; display: block; white-space: nowrap;
     }
 
-    .links { display: flex; align-items: center; gap: clamp(12px, 1.6vw, 26px); }
+    /* Enger Abstand: die Zeile hat bei --wrap 1200px nur 1072px Platz,
+       und gemessen wird hier mit Ersatzschriften - die echten koennen breiter sein. */
+    .links { display: flex; align-items: center; gap: clamp(10px, 1.2vw, 18px); }
 
     .links a {
       text-decoration: none; white-space: nowrap;
@@ -187,17 +189,16 @@
 
     .links a.hide-sm::after {
       content: ""; position: absolute; left: 0; bottom: 9px;
-      height: 1.5px; width: 0; background: var(--clay);
-      transition: width .3s var(--ease);
+      height: 1.5px; width: 100%; background: var(--clay);
+      /* skalieren statt width animieren: width löst bei jedem Frame ein Layout aus */
+      transform: scaleX(0); transform-origin: left;
+      transition: transform .25s var(--ease);
     }
-
-    .links a.hide-sm:hover::after { width: 100%; }
 
     .lang {
       border: 1.5px solid var(--line); border-radius: 999px;
       padding: 12px 14px !important; font-size: .78rem;
     }
-    .lang:hover { border-color: var(--ink); }
 
     .nav-cta {
       border: 1.5px solid var(--ink); border-radius: 999px;
@@ -206,7 +207,6 @@
       white-space: nowrap;
     }
 
-    .nav-cta:hover { background: var(--ink); color: var(--stone); }
     .nav-cta:active { transform: scale(.96); }
 
     .nav-ham {
@@ -228,6 +228,10 @@
 
     .nav-drawer {
       display: none; flex-direction: column; gap: 2px;
+      opacity: 0; transform: translateY(-8px);
+      /* allow-discrete lässt den display-Wechsel mitlaufen; Browser ohne
+         Unterstützung ignorieren die Regel und schalten hart um wie bisher. */
+      transition: opacity .2s var(--ease), transform .2s var(--ease), display .2s allow-discrete;
       padding: 8px var(--pad-x) 20px;
       background: rgba(246, 243, 238, .97);
       backdrop-filter: blur(14px);
@@ -242,11 +246,22 @@
       padding: 13px 0; border-bottom: 1px solid var(--line-2);
     }
 
-    .nav.open .nav-drawer { display: flex; }
+    .nav.open .nav-drawer { display: flex; opacity: 1; transform: none; }
+
+    @starting-style {
+      .nav.open .nav-drawer { opacity: 0; transform: translateY(-8px); }
+    }
 
     @media (max-width: 1160px) {
       .links a.hide-sm { display: none; }
       .nav-ham { display: flex; }
+    }
+
+    @media (max-width: 400px) {
+      .nav-inner { gap: 10px; }
+      .brand { gap: 9px; }
+      .brand img { width: 34px; height: 34px; }
+      .wordmark { font-size: .97rem; }
     }
 
     @media (max-width: 700px) {
@@ -269,23 +284,17 @@
       box-shadow: var(--e1);
     }
 
-    .btn:hover { transform: translateY(-3px); box-shadow: var(--e2); }
     .btn:active { transform: translateY(0) scale(.98); }
 
     .btn.clay { background: var(--clay); border-color: var(--clay); color: #fff; }
-    .btn.clay:hover { background: var(--clay-soft); border-color: var(--clay-soft); }
 
     .btn.brass { background: var(--brass); border-color: var(--brass); color: var(--onyx); }
-    .btn.brass:hover { background: #d2b473; border-color: #d2b473; }
 
     .btn.ghost { background: transparent; color: var(--ink); }
-    .btn.ghost:hover { background: rgba(20, 23, 26, .08); }
 
     .btn.ghost-light { background: transparent; color: var(--chalk); border-color: rgba(239, 234, 225, .4); }
-    .btn.ghost-light:hover { background: rgba(239, 234, 225, .1); }
 
     .btn .arr { transition: transform .25s var(--ease); }
-    .btn:hover .arr { transform: translateX(4px); }
 
     .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
 
@@ -309,8 +318,24 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      * { animation: none !important; transition-duration: .01ms !important; }
-      .reveal, .reveal.in { opacity: 1; transform: none; }
+      /* Bewegung entfernen, Rückmeldung behalten: Farb- und Deckkraftwechsel
+         bei Hover, Fokus und Eingabefeldern sind Information, keine Deko. */
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-property: opacity, color, background-color, border-color, box-shadow, fill, stroke !important;
+        transition-duration: .15s !important;
+      }
+
+      .reveal, .reveal.in { opacity: 1; transform: none; animation: none !important; }
+      .marquee-track { animation: none !important; transform: none; }
+      .nav-drawer { transform: none; }
+
+      /* Verschiebungen neutralisieren, damit nichts hart springt */
+      .btn:hover, .svc:hover, .tier:hover, .proj:hover { transform: none; }
+      .btn:hover .arr { transform: none; }
+      .links a.hide-sm:hover::after { transform: scaleX(1); }
+
       html { scroll-behavior: auto; }
       ::view-transition-group(*),
       ::view-transition-old(*),
@@ -456,7 +481,6 @@
       transition: transform .25s var(--ease), box-shadow .3s var(--ease), border-color .25s;
     }
 
-    .svc:hover { transform: translateY(-5px); box-shadow: var(--e2); border-color: rgba(175, 82, 55, .3); }
 
     .svc-ico {
       width: 46px; height: 46px; border-radius: 3px;
@@ -503,7 +527,6 @@
       transition: background .25s, border-color .25s, transform .25s var(--ease);
     }
 
-    .tier:hover { background: rgba(239, 234, 225, .07); transform: translateY(-4px); }
 
     .tier--signature {
       border-color: rgba(195, 161, 90, .5);
@@ -633,7 +656,6 @@
       transition: transform .25s var(--ease), box-shadow .3s var(--ease);
     }
 
-    .proj:hover { transform: translateY(-5px); box-shadow: var(--e2); }
 
     .proj-media { aspect-ratio: 4 / 3; position: relative; }
 
@@ -748,7 +770,6 @@
     }
 
     .kdaten a { text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
-    .kdaten a:hover { color: var(--brass); }
 
     @media (max-width: 800px) {
       .kontakt-grid { grid-template-columns: 1fr; }
@@ -780,7 +801,6 @@
       min-height: 44px;
     }
 
-    .foot-links a:hover { color: var(--brass); }
     .foot-links svg { width: 17px; height: 17px; }
 
     .foot-bottom {
@@ -789,6 +809,26 @@
     }
 
     .foot-bottom a { color: rgba(239, 234, 225, .8); display: inline-flex; align-items: center; min-height: 44px; }
+
+    /* ============ HOVER ============ */
+    /* Nur fuer echte Zeigegeraete. Auf Touch bleibt :hover nach dem
+       Antippen haengen - Karten blieben angehoben, Buttons erhoeht. */
+    @media (hover: hover) and (pointer: fine) {
+      .links a.hide-sm:hover::after { transform: scaleX(1); }
+      .lang:hover { border-color: var(--ink); }
+      .nav-cta:hover { background: var(--ink); color: var(--stone); }
+      .btn:hover { transform: translateY(-3px); box-shadow: var(--e2); }
+      .btn.clay:hover { background: var(--clay-soft); border-color: var(--clay-soft); }
+      .btn.brass:hover { background: #d2b473; border-color: #d2b473; }
+      .btn.ghost:hover { background: rgba(20, 23, 26, .08); }
+      .btn.ghost-light:hover { background: rgba(239, 234, 225, .1); }
+      .btn:hover .arr { transform: translateX(4px); }
+      .svc:hover { transform: translateY(-5px); box-shadow: var(--e2); border-color: rgba(175, 82, 55, .3); }
+      .tier:hover { background: rgba(239, 234, 225, .07); transform: translateY(-4px); }
+      .proj:hover { transform: translateY(-5px); box-shadow: var(--e2); }
+      .kdaten a:hover { color: var(--brass); }
+      .foot-links a:hover { color: var(--brass); }
+    }
   </style>
 </head>
 
@@ -811,7 +851,6 @@
         <a class="hide-sm" href="#atelier">Atelier</a>
         <a class="hide-sm" href="#material">Material</a>
         <a class="hide-sm" href="#projekte">Projekte</a>
-        <a class="hide-sm" href="#wartung">Wartung</a>
         <a class="lang" href="en/" hreflang="en" lang="en">EN</a>
         <a class="nav-cta" href="#kontakt">Beratung anfragen</a>
         <button class="nav-ham" id="nav-ham" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-drawer">
@@ -1473,6 +1512,16 @@
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
+
+    // Der Marquee laeuft endlos. Ausserhalb des Sichtfelds anhalten, damit er
+    // nicht dauerhaft den Compositor beschaeftigt und Akku zieht.
+    const marquee = document.querySelector('.marquee-track');
+    if (marquee && 'IntersectionObserver' in window) {
+      marquee.style.animationPlayState = 'paused';
+      new IntersectionObserver((eintraege) => {
+        marquee.style.animationPlayState = eintraege[0].isIntersecting ? 'running' : 'paused';
+      }, { threshold: 0 }).observe(marquee.parentElement);
+    }
 
     // Eintritts-Animationen beim Scrollen
     const reveals = document.querySelectorAll('.reveal');

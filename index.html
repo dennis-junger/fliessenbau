@@ -17,9 +17,11 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Archivo:wght@500;600;700;800&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@300;400;500;600&display=swap"
-    rel="stylesheet" />
+  <!-- Schriften nicht render-blockierend laden: der Text erscheint sofort in der
+       Fallback-Schrift und wird ersetzt, sobald die Webfont da ist (font-display: swap). -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Archivo:wght@500;600;700;800&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@300;400;500;600&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Archivo:wght@500;600;700;800&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@300;400;500;600&display=swap" /></noscript>
 
   <style>
     /* ============ DESIGN TOKENS ============ */
@@ -28,15 +30,15 @@
       --stone: #F6F3EE;
       --stone-2: #EBE5DB;
       --ink: #14171A;
-      --ink-2: #4C525A;
-      --ink-3: #8A9098;
+      --ink-2: #464B53;
+      --ink-3: #5E636B;
       --line: rgba(20, 23, 26, .13);
       --line-2: rgba(20, 23, 26, .07);
       --card: #ffffff;
 
       /* akzente */
-      --clay: #AF5237;
-      --clay-soft: #C4664A;
+      --clay: #9E4A32;
+      --clay-soft: #B85B3F;
       --brass: #C3A15A;
       --onyx: #15181B;
       --onyx-2: #1E2327;
@@ -140,7 +142,7 @@
       display: flex; align-items: center; justify-content: space-between; gap: 20px;
     }
 
-    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; line-height: 1; flex: none; }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; line-height: 1; flex: none; min-height: 44px; }
     .brand img { width: 40px; height: 40px; border-radius: 9px; display: block; }
 
     .wordmark {
@@ -166,11 +168,13 @@
       font-family: "Barlow Condensed", sans-serif;
       text-transform: uppercase; letter-spacing: .13em;
       font-weight: 600; font-size: .84rem;
-      position: relative; padding: 4px 0;
+      position: relative;
+      /* 44 px Mindesthöhe für Touch-Bedienung */
+      padding: 13px 0; display: inline-flex; align-items: center;
     }
 
     .links a.hide-sm::after {
-      content: ""; position: absolute; left: 0; bottom: -2px;
+      content: ""; position: absolute; left: 0; bottom: 9px;
       height: 1.5px; width: 0; background: var(--clay);
       transition: width .3s var(--ease);
     }
@@ -179,7 +183,7 @@
 
     .nav-cta {
       border: 1.5px solid var(--ink); border-radius: 999px;
-      padding: 9px 20px !important;
+      padding: 12px 20px !important;
       transition: background .25s, color .25s, transform .15s;
       white-space: nowrap;
     }
@@ -189,7 +193,7 @@
 
     .nav-ham {
       display: none; flex-direction: column; justify-content: center; gap: 5px;
-      width: 42px; height: 42px; padding: 0;
+      width: 44px; height: 44px; padding: 0;
       border: 1.5px solid var(--line); border-radius: 10px;
       background: transparent; cursor: pointer;
     }
@@ -228,7 +232,8 @@
     }
 
     @media (max-width: 700px) {
-      .nav-cta { display: none; }
+      /* .links a setzt display, also hier gleiche Spezifität nötig */
+      .links a.nav-cta { display: none; }
       .brand .sub { display: none; }
     }
 
@@ -278,7 +283,21 @@
       * { animation: none !important; transition-duration: .01ms !important; }
       .reveal { opacity: 1; transform: none; }
       html { scroll-behavior: auto; }
+      ::view-transition-group(*),
+      ::view-transition-old(*),
+      ::view-transition-new(*) { animation: none !important; }
     }
+
+    /* ============ SEITENÜBERGÄNGE ============ */
+    /* Sanfter Wechsel zu Impressum/Datenschutz in Browsern, die das können.
+       Ältere Browser ignorieren die Regel und springen wie bisher direkt um. */
+    @view-transition { navigation: auto; }
+
+    ::view-transition-old(root) { animation: vt-out .22s var(--ease) both; }
+    ::view-transition-new(root) { animation: vt-in .28s var(--ease) both; }
+
+    @keyframes vt-out { to { opacity: 0; } }
+    @keyframes vt-in { from { opacity: 0; transform: translateY(8px); } }
 
     /* ============ HERO ============ */
     .hero { position: relative; padding: clamp(40px, 7vw, 92px) 0 clamp(52px, 8vw, 110px); overflow: hidden; }
@@ -351,7 +370,7 @@
       font-family: "Barlow Condensed", sans-serif;
       text-transform: uppercase; letter-spacing: .24em;
       font-size: .72rem; font-weight: 600;
-      color: rgba(239, 234, 225, .55);
+      color: rgba(239, 234, 225, .78);
     }
 
     .hero-badge {
@@ -685,7 +704,7 @@
       color: rgba(239, 234, 225, .6); margin-bottom: 3px;
     }
 
-    .kdaten a { text-decoration: none; }
+    .kdaten a { text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
     .kdaten a:hover { color: var(--brass); }
 
     @media (max-width: 800px) {
@@ -715,6 +734,7 @@
       font-family: "Barlow Condensed", sans-serif;
       text-transform: uppercase; letter-spacing: .12em;
       font-size: .82rem; font-weight: 600;
+      min-height: 44px;
     }
 
     .foot-links a:hover { color: var(--brass); }
@@ -725,7 +745,7 @@
       padding-top: 22px; font-size: .85rem; color: rgba(239, 234, 225, .55);
     }
 
-    .foot-bottom a { color: rgba(239, 234, 225, .8); }
+    .foot-bottom a { color: rgba(239, 234, 225, .8); display: inline-flex; align-items: center; min-height: 44px; }
   </style>
 </head>
 

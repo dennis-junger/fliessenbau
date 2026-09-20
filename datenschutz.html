@@ -10,18 +10,20 @@
   <link rel="icon" href="img/logo.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Archivo:wght@600;700&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@300;400;500;600&display=swap"
-    rel="stylesheet" />
+  <!-- Schriften nicht render-blockierend laden: der Text erscheint sofort in der
+       Fallback-Schrift und wird ersetzt, sobald die Webfont da ist (font-display: swap). -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Archivo:wght@600;700&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@300;400;500;600&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Archivo:wght@600;700&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@300;400;500;600&display=swap" /></noscript>
 
   <style>
     :root {
       --stone: #F6F3EE;
       --ink: #14171A;
-      --ink-2: #4A5057;
-      --ink-3: #878E96;
+      --ink-2: #464B53;
+      --ink-3: #5E636B;
       --line: rgba(20, 23, 26, .13);
-      --signal: #AF5237;
+      --signal: #9E4A32;
       --brass: #C3A15A;
 
       --fs-eyebrow: clamp(.72rem, .68rem + .2vw, .82rem);
@@ -85,6 +87,7 @@
       text-decoration: none;
     }
 
+    .back { min-height: 44px; }
     .back:hover { text-decoration: underline; }
 
     main { padding: clamp(44px, 8vw, 84px) 0; }
@@ -166,6 +169,22 @@
     }
 
     footer a { color: var(--ink-3); }
+
+    /* Sanfter Seitenwechsel, wo der Browser es unterstützt */
+    @view-transition { navigation: auto; }
+
+    ::view-transition-old(root) { animation: vt-out .22s cubic-bezier(.22,1,.36,1) both; }
+    ::view-transition-new(root) { animation: vt-in .28s cubic-bezier(.22,1,.36,1) both; }
+
+    @keyframes vt-out { to { opacity: 0; } }
+    @keyframes vt-in { from { opacity: 0; transform: translateY(8px); } }
+
+    @media (prefers-reduced-motion: reduce) {
+      ::view-transition-group(*),
+      ::view-transition-old(*),
+      ::view-transition-new(*) { animation: none !important; }
+      * { transition-duration: .01ms !important; }
+    }
   </style>
 </head>
 

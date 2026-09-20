@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fliesenatelier Berlin · Fliesen, Naturstein &amp; Direktimport</title>
+  <meta name="description"
+    content="Fliesenatelier in Berlin: Verlegung, Fliesenkunst und Intarsien, Naturstein und Großformat, Altbau-Restaurierung, Fugenwartung – mit eigenem Direktimport. Vom Budget bis Onyx." />
+  <meta property="og:title" content="Fliesenatelier Berlin · Fliesen, Naturstein &amp; Direktimport" />
+  <meta property="og:description"
+    content="Fliesen als Gestaltung: Intarsien, Buchmatch, Zellige, Großformat. Eigener Import aus Italien, Spanien, Portugal, Marokko und der Türkei." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://example.de/" />
+  <meta name="theme-color" content="#14171A" />
+  <link rel="icon" href="img/logo.svg" type="image/svg+xml" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Archivo:wght@500;600;700;800&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    /* ============ DESIGN TOKENS ============ */
+    :root {
+      /* stein & ton */
+      --stone: #F6F3EE;
+      --stone-2: #EBE5DB;
+      --ink: #14171A;
+      --ink-2: #4C525A;
+      --ink-3: #8A9098;
+      --line: rgba(20, 23, 26, .13);
+      --line-2: rgba(20, 23, 26, .07);
+      --card: #ffffff;
+
+      /* akzente */
+      --clay: #AF5237;
+      --clay-soft: #C4664A;
+      --brass: #C3A15A;
+      --onyx: #15181B;
+      --onyx-2: #1E2327;
+      --chalk: #EFEAE1;
+
+      /* fluid type */
+      --fs-eyebrow: clamp(.72rem, .68rem + .2vw, .82rem);
+      --fs-body: clamp(1rem, .96rem + .3vw, 1.1rem);
+      --fs-lead: clamp(1.1rem, 1rem + .6vw, 1.38rem);
+      --fs-h3: clamp(1.3rem, 1.05rem + 1.2vw, 1.8rem);
+      --fs-h2: clamp(1.9rem, 1.35rem + 2.8vw, 3.2rem);
+      --fs-h1: clamp(2.3rem, 1.5rem + 4.1vw, 4.4rem);
+
+      /* spacing */
+      --pad-x: clamp(20px, 5vw, 64px);
+      --sec-y: clamp(64px, 9vw, 130px);
+      --wrap: 1200px;
+
+      /* elevation */
+      --e1: 0 1px 2px rgba(20, 23, 26, .06);
+      --e2: 0 10px 30px -14px rgba(20, 23, 26, .35);
+      --e3: 0 24px 60px -24px rgba(20, 23, 26, .5);
+
+      --ease: cubic-bezier(.22, 1, .36, 1);
+      --dur: .5s;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--stone);
+      color: var(--ink);
+      font-family: "Barlow", system-ui, sans-serif;
+      font-size: var(--fs-body);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: var(--pad-x); }
+
+    a { color: inherit; }
+
+    .display { font-family: "Archivo", system-ui, sans-serif; font-weight: 700; letter-spacing: -.02em; }
+    .serif { font-family: "Fraunces", Georgia, serif; font-weight: 400; letter-spacing: -.01em; }
+
+    .eyebrow {
+      font-family: "Barlow Condensed", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: .22em;
+      font-size: var(--fs-eyebrow);
+      font-weight: 600;
+      color: var(--clay);
+      display: inline-block;
+    }
+
+    .head { font-size: var(--fs-h2); line-height: 1.06; margin: 12px 0 18px; }
+
+    .muted { color: var(--ink-2); }
+
+    ::selection { background: var(--clay); color: #fff; }
+
+    :focus-visible { outline: 2px solid var(--clay); outline-offset: 3px; border-radius: 4px; }
+
+    .skip {
+      position: absolute; left: -9999px; top: 0;
+      background: var(--ink); color: var(--stone); padding: 12px 20px; z-index: 200;
+    }
+    .skip:focus { left: 0; }
+
+    /* ============ SCROLL PROGRESS ============ */
+    .progress {
+      position: fixed; inset: 0 auto auto 0;
+      height: 3px; width: 100%;
+      transform: scaleX(0); transform-origin: 0 50%;
+      background: linear-gradient(90deg, var(--clay), var(--brass));
+      z-index: 100;
+    }
+
+    /* ============ NAV ============ */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      transition: background .35s var(--ease), box-shadow .35s var(--ease), border-color .35s;
+      border-bottom: 1px solid transparent;
+    }
+
+    .nav.stuck {
+      background: rgba(246, 243, 238, .84);
+      backdrop-filter: blur(14px) saturate(1.4);
+      -webkit-backdrop-filter: blur(14px) saturate(1.4);
+      border-bottom: 1px solid var(--line);
+      box-shadow: var(--e1);
+    }
+
+    .nav-inner {
+      max-width: var(--wrap); margin-inline: auto;
+      padding: 14px var(--pad-x);
+      display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; line-height: 1; flex: none; }
+    .brand img { width: 40px; height: 40px; border-radius: 9px; display: block; }
+
+    .wordmark {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 500;
+      font-size: clamp(1.05rem, .92rem + .55vw, 1.32rem);
+      letter-spacing: -.01em;
+      display: block;
+      white-space: nowrap;
+    }
+
+    .sub {
+      font-family: "Barlow Condensed", sans-serif;
+      text-transform: uppercase; letter-spacing: .24em;
+      font-size: .6rem; font-weight: 600;
+      color: var(--clay); margin-top: 5px; display: block; white-space: nowrap;
+    }
+
+    .links { display: flex; align-items: center; gap: clamp(12px, 1.6vw, 26px); }
+
+    .links a {
+      text-decoration: none; white-space: nowrap;
+      font-family: "Barlow Condensed", sans-serif;
+      text-transform: uppercase; letter-spacing: .13em;
+      font-weight: 600; font-size: .84rem;
+      position: relative; padding: 4px 0;
+    }
+
+    .links a.hide-sm::after {
+      content: ""; position: absolute; left: 0; bottom: -2px;
+      height: 1.5px; width: 0; background: var(--clay);
+      transition: width .3s var(--ease);
+    }
+
+    .links a.hide-sm:hover::after { width: 100%; }
+
+    .nav-cta {
+      border: 1.5px solid var(--ink); border-radius: 999px;
+      padding: 9px 20px !important;
+      transition: background .25s, color .25s, transform .15s;
+      white-space: nowrap;
+    }
+
+    .nav-cta:hover { background: var(--ink); color: var(--stone); }
+    .nav-cta:active { transform: scale(.96); }
+
+    .nav-ham {
+      display: none; flex-direction: column; justify-content: center; gap: 5px;
+      width: 42px; height: 42px; padding: 0;
+      border: 1.5px solid var(--line); border-radius: 10px;
+      background: transparent; cursor: pointer;
+    }
+
+    .nav-ham span {
+      display: block; height: 2px; width: 18px; margin-inline: auto;
+      background: var(--ink);
+      transition: transform .3s var(--ease), opacity .2s;
+    }
+
+    .nav.open .nav-ham span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav.open .nav-ham span:nth-child(2) { opacity: 0; }
+    .nav.open .nav-ham span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .nav-drawer {
+      display: none; flex-direction: column; gap: 2px;
+      padding: 8px var(--pad-x) 20px;
+      background: rgba(246, 243, 238, .97);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-drawer a {
+      text-decoration: none;
+      font-family: "Barlow Condensed", sans-serif;
+      text-transform: uppercase; letter-spacing: .13em;
+      font-weight: 600; font-size: 1rem;
+      padding: 13px 0; border-bottom: 1px solid var(--line-2);
+    }
+
+    .nav.open .nav-drawer { display: flex; }
+
+    @media (max-width: 1160px) {
+      .links a.hide-sm { display: none; }
+      .nav-ham { display: flex; }
+    }
+
+    @media (max-width: 700px) {
+      .nav-cta { display: none; }
+      .brand .sub { display: none; }
+    }
+
+    /* ============ BUTTONS ============ */
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      text-decoration: none;
+      font-family: "Barlow Condensed", sans-serif;
+      text-transform: uppercase; letter-spacing: .1em;
+      font-weight: 600; font-size: .95rem;
+      padding: 14px 26px; border-radius: 999px;
+      background: var(--ink); color: var(--stone);
+      border: 1.5px solid var(--ink); cursor: pointer;
+      transition: transform .18s var(--ease), box-shadow .25s var(--ease), background .25s;
+      box-shadow: var(--e1);
+    }
+
+    .btn:hover { transform: translateY(-3px); box-shadow: var(--e2); }
+    .btn:active { transform: translateY(0) scale(.98); }
+
+    .btn.clay { background: var(--clay); border-color: var(--clay); color: #fff; }
+    .btn.clay:hover { background: var(--clay-soft); border-color: var(--clay-soft); }
+
+    .btn.brass { background: var(--brass); border-color: var(--brass); color: var(--onyx); }
+    .btn.brass:hover { background: #d2b473; border-color: #d2b473; }
+
+    .btn.ghost { background: transparent; color: var(--ink); }
+    .btn.ghost:hover { background: rgba(20, 23, 26, .08); }
+
+    .btn.ghost-light { background: transparent; color: var(--chalk); border-color: rgba(239, 234, 225, .4); }
+    .btn.ghost-light:hover { background: rgba(239, 234, 225, .1); }
+
+    .btn .arr { transition: transform .25s var(--ease); }
+    .btn:hover .arr { transform: translateX(4px); }
+
+    .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+
+    /* ============ REVEAL ============ */
+    .reveal {
+      opacity: 0; transform: translateY(22px);
+      transition: opacity .7s var(--ease), transform .7s var(--ease);
+    }
+
+    .reveal.in { opacity: 1; transform: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition-duration: .01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+      html { scroll-behavior: auto; }
+    }
+
+    /* ============ HERO ============ */
+    .hero { position: relative; padding: clamp(40px, 7vw, 92px) 0 clamp(52px, 8vw, 110px); overflow: hidden; }
+
+    /* Fliesenraster statt Blaupause */
+    .hero::before {
+      content: ""; position: absolute; inset: 0;
+      background-image:
+        linear-gradient(var(--line-2) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line-2) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse 80% 70% at 72% 20%, #000 20%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 70% at 72% 20%, #000 20%, transparent 75%);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      position: relative; display: grid;
+      grid-template-columns: 1.14fr .86fr;
+      gap: clamp(28px, 5vw, 64px); align-items: center;
+    }
+
+    .hero h1 {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 400;
+      font-size: var(--fs-h1);
+      line-height: 1.02;
+      letter-spacing: -.025em;
+      margin: 16px 0 20px;
+      text-wrap: balance;
+    }
+
+    .hero h1 em { font-style: italic; color: var(--clay); }
+
+    .hero .lead { font-size: var(--fs-lead); color: var(--ink-2); max-width: 52ch; margin: 0; }
+
+    .trust {
+      display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 30px;
+      font-family: "Barlow Condensed", sans-serif;
+      text-transform: uppercase; letter-spacing: .12em;
+      font-size: .8rem; font-weight: 600; color: var(--ink-2);
+    }
+
+    .trust span { display: inline-flex; align-items: center; gap: 8px; }
+    .trust svg { width: 15px; height: 15px; color: var(--clay); flex: none; }
+
+    .hero-media { position: relative; }
+
+    .hero-frame {
+      position: relative; border-radius: 4px; overflow: hidden;
+      box-shadow: var(--e3); background: var(--onyx-2);
+      aspect-ratio: 4 / 5;
+    }
+
+    .hero-frame img, .proj-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* Foto-Platzhalter in Fliesenspiegel-Optik.
+       Zum Ersetzen einfach ein <img src="img/…"> statt des .ph-Elements einsetzen. */
+    .ph {
+      position: relative; width: 100%; height: 100%;
+      background:
+        linear-gradient(rgba(239, 234, 225, .07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(239, 234, 225, .07) 1px, transparent 1px),
+        linear-gradient(150deg, var(--onyx-2), var(--onyx) 60%, #0f1214);
+      background-size: 25% 20%, 25% 20%, 100% 100%;
+      display: grid; place-items: center; text-align: center; padding: 24px;
+    }
+
+    .ph b {
+      font-family: "Barlow Condensed", sans-serif;
+      text-transform: uppercase; letter-spacing: .24em;
+      font-size: .72rem; font-weight: 600;
+      color: rgba(239, 234, 225, .55);
+    }
+
+    .hero-badge {
+      position: absolute; right: -14px; top: -18px; z-index: 3;
+      background: var(--clay); color: #fff; border-radius: 999px;
+      width: 124px; height: 124px;
+      display: grid; place-items: center; text-align: center;
+      font-family: "Barlow Condensed", sans-serif;
+      text-transform: uppercase; letter-spacing: .1em;
+      font-weight: 700; font-size: .8rem; line-height: 1.2;
+      box-shadow: var(--e2); transform: rotate(-8deg);
+    }
+
+    @media (max-width: 860px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-media { order: -1; max-width: 460px; }
+      .hero-frame { aspect-ratio: 4 / 3; }
+      .hero-badge { width: 100px; height: 100px; font-size: .72rem; right: -6px; }
+    }
+
+    /* ============ MARQUEE ============ */
+    .marquee {
+      background: var(--ink); color: var(--chalk);
+      overflow: hidden; padding: 13px 0;
+    }
+
+    .marquee-track {
+      display: flex; gap: 40px; width: max-content;
+      animation: slide 52s linear infinite;
+      font-family: "Barlow Condensed", sans-serif;
+      text-transform: uppercase; letter-spacing: .2em;
+      font-size: .82rem; font-weight: 600; white-space: nowrap;
+    }
+
+    .marquee-track span::after { content: "·"; margin-left: 40px; color: var(--brass); }
+
+    @keyframes slide { to { transform: translateX(-50%); } }
+
+    /* ============ SECTION BASICS ============ */
+    section { padding: var(--sec-y) 0; }
+
+    .sec-head { max-width: 62ch; margin-bottom: clamp(30px, 4vw, 52px); }
+    .sec-head p { color: var(--ink-2); margin: 0; }
+
+    /* ============ LEISTUNGEN ============ */
+    .leistungen { background: var(--stone-2); }
+
+    .svc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(258px, 1fr)); gap: clamp(14px, 1.8vw, 22px); }
+
+    .svc {
+      background: var(--card); border: 1px solid var(--line-2);
+      border-radius: 4px; padding: 26px 24px 28px; box-shadow: var(--e1);
+      transition: transform .25s var(--ease), box-shadow .3s var(--ease), border-color .25s;
+    }
+
+    .svc:hover { transform: translateY(-5px); box-shadow: var(--e2); border-color: rgba(175, 82, 55, .3); }
+
+    .svc-ico {
+      width: 46px; height: 46px; border-radius: 3px;
+      background: rgba(175, 82, 55, .1); color: var(--clay);
+      display: grid; place-items: center; margin-bottom: 16px;
+    }
+
+    .svc-ico svg { width: 24px; height: 24px; }
+
+    .svc h3 { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 1.2rem; margin: 0 0 8px; }
+    .svc p { margin: 0; color: var(--ink-2); font-size: .98rem; }
+
+    .svc ul {
+      margin: 14px 0 0; padding: 0; list-style: none;
+      font-family: "Barlow Condensed", sans-serif;
+      text-transform: uppercase; letter-spacing: .1em;
+      font-size: .78rem; font-weight: 600; color: var(--ink-3);
+      display: flex; flex-wrap: wrap; gap: 6px 14px;
+    }
+
+    /* ============ ATELIER / PREMIUM ============ */
+    .atelier { background: var(--onyx); color: var(--chalk); position: relative; overflow: hidden; }
+
+    .atelier::before {
+      content: ""; position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(195, 161, 90, .07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(195, 161, 90, .07) 1px, transparent 1px);
+      background-size: 90px 90px; pointer-events: none;
+    }
+
+    .atelier .wrap { position: relative; }
+    .atelier .eyebrow { color: var(--brass); }
+    .atelier .sec-head p { color: rgba(239, 234, 225, .72); }
+    .atelier .head { font-family: "Fraunces", Georgia, serif; font-weight: 400; }
+
+    .tier-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 18px; align-items: stretch; }
+
+    .tier {
+      border: 1px solid rgba(239, 234, 225, .16);
+      border-radius: 4px; padding: 30px 26px 32px;
+      background: rgba(239, 234, 225, .035);
+      display: flex; flex-direction: column;
+      transition: background .25s, border-color .25s, transform .25s var(--ease);
+    }
+
+    .tier:hover { background: rgba(239, 234, 225, .07); transform: translateY(-4px); }
+
+    .tier--signature {
+      border-color: rgba(195, 161, 90, .5);
+      background: linear-gradient(170deg, rgba(195, 161, 90, .14), rgba(239, 234, 225, .03) 60%);
+      position: relative;
+    }
+
+    .tier--signature::after {
+      content: "Empfohlen für Gestaltungsprojekte";
+      position: absolute; top: 0; right: 0;
+      background: var(--brass); color: var(--onyx);
+      font-family: "Barlow Condensed", sans-serif;
+      text-transform: uppercase; letter-spacing: .14em;
+      font-size: .64rem; font-weight: 700;
+      padding: 6px 12px;
+    }
+
+    .tier h3 {
+      font-family: "Fraunces", Georgia, serif; font-weight: 500;
+      font-size: 1.5rem; margin: 0 0 6px; color: var(--chalk);
+    }
+
+    .tier .tier-for {
+      font-family: "Barlow Condensed", sans-serif;
+      text-transform: uppercase; letter-spacing: .16em;
+      font-size: .72rem; font-weight: 600;
+      color: var(--brass); margin: 0 0 18px;
+    }
+
+    .tier ul { list-style: none; margin: 0 0 22px; padding: 0; }
+
+    .tier li {
+      position: relative; padding-left: 22px; margin-bottom: 10px;
+      font-size: .96rem; color: rgba(239, 234, 225, .78);
+    }
+
+    .tier li::before {
+      content: ""; position: absolute; left: 0; top: .52em;
+      width: 9px; height: 9px; border: 1px solid var(--brass);
+      transform: rotate(45deg);
+    }
+
+    .tier .tier-price {
+      margin-top: auto; padding-top: 18px;
+      border-top: 1px solid rgba(239, 234, 225, .14);
+      font-family: "Barlow Condensed", sans-serif;
+      text-transform: uppercase; letter-spacing: .12em;
+      font-size: .8rem; font-weight: 600; color: rgba(239, 234, 225, .6);
+    }
+
+    .tier .tier-price b { display: block; font-size: 1.5rem; letter-spacing: -.01em; color: var(--chalk); margin-top: 4px; }
+
+    /* ============ IMPORT ============ */
+    .import { background: var(--stone); }
+
+    .import-grid { display: grid; grid-template-columns: .95fr 1.05fr; gap: clamp(28px, 4vw, 60px); align-items: center; }
+
+    .origin-list { list-style: none; margin: 26px 0 0; padding: 0; border-top: 1px solid var(--line); }
+
+    .origin-list li {
+      display: grid; grid-template-columns: 8.5rem 1fr; gap: 16px;
+      padding: 15px 0; border-bottom: 1px solid var(--line); align-items: baseline;
+    }
+
+    .origin-list b {
+      font-family: "Barlow Condensed", sans-serif;
+      text-transform: uppercase; letter-spacing: .14em;
+      font-size: .78rem; font-weight: 600; color: var(--clay);
+    }
+
+    .origin-list span { color: var(--ink-2); font-size: .98rem; }
+
+    .price-span {
+      margin-top: 28px; padding: 22px 24px;
+      background: var(--card); border: 1px solid var(--line);
+      border-left: 3px solid var(--clay); border-radius: 0 4px 4px 0;
+    }
+
+    .price-span b { display: block; font-family: "Fraunces", Georgia, serif; font-size: 1.15rem; margin-bottom: 6px; }
+    .price-span span { color: var(--ink-2); font-size: .97rem; }
+
+    @media (max-width: 860px) {
+      .import-grid { grid-template-columns: 1fr; }
+      .origin-list li { grid-template-columns: 1fr; gap: 2px; }
+    }
+
+    /* ============ DETAILS / HANDWERK ============ */
+    .details { background: var(--stone-2); }
+
+    .det-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: clamp(18px, 2.4vw, 30px); counter-reset: det; }
+
+    .det { position: relative; padding-top: 26px; border-top: 2px solid var(--ink); }
+
+    .det::before {
+      counter-increment: det; content: "0" counter(det);
+      position: absolute; top: -14px; left: 0;
+      background: var(--stone-2); padding-right: 12px;
+      font-family: "Fraunces", Georgia, serif; font-weight: 500;
+      font-size: 1.05rem; color: var(--clay);
+    }
+
+    .det h3 { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 1.18rem; margin: 0 0 8px; }
+    .det p { margin: 0; color: var(--ink-2); font-size: .98rem; }
+
+    /* ============ ABLAUF ============ */
+    .ablauf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: clamp(18px, 2.4vw, 30px); counter-reset: step; }
+
+    .step { position: relative; padding-top: 26px; border-top: 2px solid var(--line); }
+
+    .step::before {
+      counter-increment: step; content: "0" counter(step);
+      position: absolute; top: -14px; left: 0;
+      background: var(--stone); padding-right: 12px;
+      font-family: "Fraunces", Georgia, serif; font-weight: 500;
+      font-size: 1.05rem; color: var(--clay);
+    }
+
+    .step h3 { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 1.15rem; margin: 0 0 8px; }
+    .step p { margin: 0; color: var(--ink-2); font-size: .98rem; }
+
+    /* ============ PROJEKTE ============ */
+    .proj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: clamp(16px, 2vw, 26px); }
+
+    .proj {
+      background: var(--card); border-radius: 4px; overflow: hidden;
+      border: 1px solid var(--line-2); box-shadow: var(--e1); margin: 0;
+      transition: transform .25s var(--ease), box-shadow .3s var(--ease);
+    }
+
+    .proj:hover { transform: translateY(-5px); box-shadow: var(--e2); }
+
+    .proj-media { aspect-ratio: 4 / 3; }
+
+    .proj figcaption { padding: 20px 22px 24px; }
+
+    .proj figcaption b { display: block; font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 1.14rem; margin-bottom: 6px; }
+    .proj figcaption > span { color: var(--ink-2); font-size: .96rem; }
+
+    .proj .tags { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .chip {
+      font-family: "Barlow Condensed", sans-serif;
+      text-transform: uppercase; letter-spacing: .12em;
+      font-size: .72rem; font-weight: 600; color: var(--ink-2);
+      border: 1px solid var(--line); border-radius: 999px;
+      padding: 5px 12px; background: var(--stone);
+    }
+
+    /* ============ WARTUNG ============ */
+    .wartung { background: var(--onyx-2); color: var(--chalk); }
+    .wartung .eyebrow { color: var(--brass); }
+    .wartung .head { font-family: "Fraunces", Georgia, serif; font-weight: 400; }
+    .wartung .sec-head p { color: rgba(239, 234, 225, .72); }
+
+    .wart-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(28px, 4vw, 56px); align-items: center; }
+
+    .wart-list { list-style: none; margin: 0; padding: 0; }
+
+    .wart-list li {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 16px 0; border-bottom: 1px solid rgba(239, 234, 225, .14);
+    }
+
+    .wart-list svg { width: 20px; height: 20px; color: var(--brass); flex: none; margin-top: 4px; }
+    .wart-list b { display: block; margin-bottom: 2px; }
+    .wart-list span span { color: rgba(239, 234, 225, .7); font-size: .96rem; }
+
+    @media (max-width: 860px) { .wart-grid { grid-template-columns: 1fr; } }
+
+    /* ============ GEBIET ============ */
+    .gebiet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 4vw, 60px); align-items: center; }
+
+    .bezirke { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+
+    @media (max-width: 800px) { .gebiet-grid { grid-template-columns: 1fr; } }
+
+    /* ============ KONTAKT ============ */
+    .kontakt { background: var(--ink); color: var(--chalk); }
+    .kontakt .eyebrow { color: var(--brass); }
+    .kontakt .head { font-family: "Fraunces", Georgia, serif; font-weight: 400; }
+    .kontakt .sec-head p { color: rgba(239, 234, 225, .72); }
+
+    .kontakt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 4vw, 56px); align-items: start; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .field { display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px; }
+
+    .field label {
+      font-family: "Barlow Condensed", sans-serif;
+      text-transform: uppercase; letter-spacing: .14em;
+      font-size: .74rem; font-weight: 600; color: rgba(239, 234, 225, .7);
+    }
+
+    .field input, .field textarea, .field select {
+      font-family: "Barlow", sans-serif; font-size: 1rem; color: var(--chalk);
+      background: rgba(239, 234, 225, .06);
+      border: 1px solid rgba(239, 234, 225, .18);
+      border-radius: 3px; padding: 12px 14px;
+      transition: border-color .2s, background .2s;
+    }
+
+    .field select option { color: #14171A; }
+
+    .field input:focus, .field textarea:focus, .field select:focus {
+      outline: none; border-color: var(--brass); background: rgba(239, 234, 225, .1);
+    }
+
+    .field textarea { resize: vertical; min-height: 120px; }
+
+    .form-note { font-size: .84rem; color: rgba(239, 234, 225, .55); margin: 14px 0 0; }
+    .form-note a { color: var(--brass); }
+
+    .kdaten { list-style: none; margin: 0; padding: 0; }
+
+    .kdaten li {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 18px 0; border-bottom: 1px solid rgba(239, 234, 225, .14);
+    }
+
+    .kdaten svg { width: 20px; height: 20px; color: var(--brass); flex: none; margin-top: 4px; }
+
+    .kdaten b {
+      display: block;
+      font-family: "Barlow Condensed", sans-serif;
+      text-transform: uppercase; letter-spacing: .14em;
+      font-size: .74rem; font-weight: 600;
+      color: rgba(239, 234, 225, .6); margin-bottom: 3px;
+    }
+
+    .kdaten a { text-decoration: none; }
+    .kdaten a:hover { color: var(--brass); }
+
+    @media (max-width: 800px) {
+      .kontakt-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    /* ============ FOOTER ============ */
+    footer { background: var(--onyx-2); color: var(--chalk); padding: clamp(44px, 6vw, 72px) 0 28px; }
+
+    .foot-top {
+      display: flex; flex-wrap: wrap; justify-content: space-between; gap: 28px;
+      padding-bottom: 28px; border-bottom: 1px solid rgba(239, 234, 225, .14);
+    }
+
+    .foot-tag {
+      font-family: "Barlow Condensed", sans-serif;
+      text-transform: uppercase; letter-spacing: .2em;
+      font-size: .7rem; font-weight: 600;
+      color: rgba(239, 234, 225, .6); margin-top: 8px;
+    }
+
+    .foot-links { display: flex; flex-wrap: wrap; gap: 12px 26px; align-items: center; }
+
+    .foot-links a {
+      display: inline-flex; align-items: center; gap: 9px; text-decoration: none;
+      font-family: "Barlow Condensed", sans-serif;
+      text-transform: uppercase; letter-spacing: .12em;
+      font-size: .82rem; font-weight: 600;
+    }
+
+    .foot-links a:hover { color: var(--brass); }
+    .foot-links svg { width: 17px; height: 17px; }
+
+    .foot-bottom {
+      display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px;
+      padding-top: 22px; font-size: .85rem; color: rgba(239, 234, 225, .55);
+    }
+
+    .foot-bottom a { color: rgba(239, 234, 225, .8); }
+  </style>
+</head>
+
+<body id="top">
+  <a class="skip" href="#main">Zum Inhalt springen</a>
+  <div class="progress" id="progress"></div>
+
+  <!-- NAV -->
+  <header class="nav" id="nav">
+    <div class="nav-inner">
+      <a class="brand" href="#top">
+        <img src="img/logo.svg" alt="" width="40" height="40" />
+        <span>
+          <span class="wordmark">Fliesenatelier Berlin</span>
+          <span class="sub">Fliesen · Naturstein · Trockenbau</span>
+        </span>
+      </a>
+      <nav class="links" aria-label="Hauptnavigation">
+        <a class="hide-sm" href="#leistungen">Leistungen</a>
+        <a class="hide-sm" href="#atelier">Atelier</a>
+        <a class="hide-sm" href="#material">Material</a>
+        <a class="hide-sm" href="#projekte">Projekte</a>
+        <a class="hide-sm" href="#wartung">Wartung</a>
+        <a class="nav-cta" href="#kontakt">Beratung anfragen</a>
+        <button class="nav-ham" id="nav-ham" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-drawer">
+          <span></span><span></span><span></span>
+        </button>
+      </nav>
+    </div>
+    <nav class="nav-drawer" id="nav-drawer" aria-label="Hauptmenü">
+      <a href="#leistungen">Leistungen</a>
+      <a href="#atelier">Atelier-Linie</a>
+      <a href="#material">Material &amp; Import</a>
+      <a href="#handwerk">Handwerk</a>
+      <a href="#ablauf">Ablauf</a>
+      <a href="#projekte">Projekte</a>
+      <a href="#wartung">Wartung</a>
+      <a href="#kontakt">Beratung anfragen</a>
+      <a href="impressum.html">Impressum</a>
+    </nav>
+  </header>
+
+  <main id="main">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-grid">
+          <div class="reveal">
+            <span class="eyebrow">Fliesenatelier für Berlin</span>
+            <h1>Eine Fliese ist ein Material. <em>Ein Fliesenspiegel ist eine Entscheidung.</em></h1>
+            <p class="lead">Wir verlegen nicht nur – wir gestalten. Intarsien, Buchmatch-Spiegelung,
+              handgesetztes Zellige, Großformat ohne sichtbare Kante. Material beschaffen wir selbst:
+              vom günstigen Meterpreis bis zum hinterleuchteten Onyx.</p>
+            <div class="cta-row">
+              <a class="btn clay" href="#kontakt">Beratungstermin vereinbaren <span class="arr">&rarr;</span></a>
+              <a class="btn ghost" href="#atelier">Die Atelier-Linie ansehen</a>
+            </div>
+            <div class="trust">
+              <span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+                Eigener Direktimport
+              </span>
+              <span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+                Musterachse vor Auftrag
+              </span>
+              <span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+                Meisterbetrieb
+              </span>
+            </div>
+          </div>
+          <div class="hero-media reveal">
+            <div class="hero-badge">Jede Fliese<br />der Welt<br />beschaffbar</div>
+            <div class="hero-frame">
+              <!-- Foto ersetzen: <img src="img/hero-bad.jpg" alt="…" /> -->
+              <div class="ph"><b>Platzhalter<br />Bad in Naturstein</b></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>Fliesen verlegen</span><span>Naturstein &amp; Onyx</span><span>Großformat bis 320 × 160</span><span>Mosaik &amp; Intarsie</span><span>Zellige von Hand</span><span>Buchmatch</span><span>Gehrungskante statt Schiene</span><span>Historische Zementfliesen</span><span>Bad komplett</span><span>Fugen- &amp; Silikonwartung</span><span>Direktimport</span><span>Trockenbau als Unterbau</span>
+        <span>Fliesen verlegen</span><span>Naturstein &amp; Onyx</span><span>Großformat bis 320 × 160</span><span>Mosaik &amp; Intarsie</span><span>Zellige von Hand</span><span>Buchmatch</span><span>Gehrungskante statt Schiene</span><span>Historische Zementfliesen</span><span>Bad komplett</span><span>Fugen- &amp; Silikonwartung</span><span>Direktimport</span><span>Trockenbau als Unterbau</span>
+      </div>
+    </div>
+
+    <!-- LEISTUNGEN -->
+    <section class="leistungen" id="leistungen">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">Was wir machen</span>
+          <h2 class="head serif">Alles rund um die Fliese – und der Unterbau dazu.</h2>
+          <p>Der Schwerpunkt liegt auf der Fliese: anbringen, formen, gestalten, instand halten.
+            Trockenbau machen wir da, wo er die Fliesenarbeit erst möglich macht.</p>
+        </div>
+        <div class="svc-grid">
+
+          <article class="svc reveal">
+            <div class="svc-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>
+              </svg>
+            </div>
+            <h3>Fliesen verlegen</h3>
+            <p>Wand und Boden, Bad, Küche, Wohnraum und Gewerbe. Sauber im Achsmaß geplant,
+              nicht einfach „von der Ecke weg" angefangen.</p>
+            <ul><li>Bad</li><li>Küche</li><li>Wohnraum</li><li>Gewerbe</li></ul>
+          </article>
+
+          <article class="svc reveal">
+            <div class="svc-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M4 5h16v14H4z"/><path d="M4 12h16"/><path d="M12 5v14"/><circle cx="8" cy="8.5" r="1"/>
+              </svg>
+            </div>
+            <h3>Naturstein &amp; Onyx</h3>
+            <p>Marmor, Travertin, Kalkstein, Onyx. Wir wählen die Platten am Block aus,
+              damit Maserung und Farbe im Raum zusammenpassen.</p>
+            <ul><li>Marmor</li><li>Travertin</li><li>Onyx</li><li>Hinterleuchtet</li></ul>
+          </article>
+
+          <article class="svc reveal">
+            <div class="svc-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="2.5" y="4" width="19" height="16" rx="1"/><path d="M2.5 4 21.5 20"/>
+              </svg>
+            </div>
+            <h3>Großformat &amp; XXL</h3>
+            <p>Platten bis 320 × 160 cm – fugenarme Flächen, die einen Raum ruhig wirken lassen.
+              Transport, Handling und Zuschnitt machen wir selbst.</p>
+            <ul><li>Bis 320 × 160</li><li>Dünnformat</li><li>Fugenarm</li></ul>
+          </article>
+
+          <article class="svc reveal">
+            <div class="svc-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 3 21 12l-9 9-9-9Z"/><path d="M12 8.5 15.5 12 12 15.5 8.5 12Z"/>
+              </svg>
+            </div>
+            <h3>Fliesenkunst &amp; Intarsie</h3>
+            <p>Wasserstrahlgeschnittene Einleger, Ornamentböden, Bordüren, gesetzte Mosaike
+              und handverlegtes Zellige. Fliese als Gestaltung, nicht als Belag.</p>
+            <ul><li>Wasserstrahl</li><li>Mosaik</li><li>Zellige</li><li>Ornament</li></ul>
+          </article>
+
+          <article class="svc reveal">
+            <div class="svc-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M7 20V9l5-5 5 5v11"/><path d="M4 20h16"/><path d="M10.5 20v-5h3v5"/>
+              </svg>
+            </div>
+            <h3>Bad aus einer Hand</h3>
+            <p>Abbruch, Abdichtung, Trockenbau, Fliesen, Fugen – wir koordinieren Sanitär
+              und Elektrik mit und übergeben ein fertiges Bad.</p>
+            <ul><li>Abdichtung</li><li>Barrierefrei</li><li>Komplettbad</li></ul>
+          </article>
+
+          <article class="svc reveal">
+            <div class="svc-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M3 21V8l6-5 6 5"/><path d="M15 21V12h6v9"/><path d="M2 21h20"/><path d="M6.5 11h2M6.5 15h2"/>
+              </svg>
+            </div>
+            <h3>Altbau &amp; Denkmal</h3>
+            <p>Historische Zement- und Mettlacher Fliesen reinigen, ergänzen, nachfertigen
+              lassen und wieder einsetzen – statt sie herauszureißen.</p>
+            <ul><li>Restaurierung</li><li>Nachfertigung</li><li>Gründerzeit</li></ul>
+          </article>
+
+          <article class="svc reveal">
+            <div class="svc-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M4 7h16v13H4z"/><path d="M4 12h16"/><path d="M9 7v13M15 7v13"/><path d="m5 4 3 3M19 4l-3 3"/>
+              </svg>
+            </div>
+            <h3>Formen &amp; Zuschnitt</h3>
+            <p>Gehrungen, Rundungen, Ausschnitte, Waschtische und Bänke aus Platte –
+              alles, wofür man eine Fliese nicht einfach gerade schneidet.</p>
+            <ul><li>Gehrung</li><li>Rundung</li><li>Waschtisch</li><li>Sitzbank</li></ul>
+          </article>
+
+          <article class="svc reveal">
+            <div class="svc-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18"/><path d="M9 9v12"/>
+              </svg>
+            </div>
+            <h3>Trockenbau als Unterbau</h3>
+            <p>Vorwände, Nischen, Podeste, Lichtvouten und Revisionen – der Unterbau,
+              der aufwendige Fliesenlösungen überhaupt erst trägt.</p>
+            <ul><li>Vorwände</li><li>Nischen</li><li>Podeste</li><li>Lichtvouten</li></ul>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ATELIER-LINIE (High Value) -->
+    <section class="atelier" id="atelier">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">Die Atelier-Linie</span>
+          <h2 class="head">Drei Wege zur fertigen Fläche.</h2>
+          <p>Dieselben Hände, drei Tiefen der Planung. Wer nur eine solide Fläche braucht,
+            nimmt Klassik. Wer ein Bad will, über das gesprochen wird, nimmt Signature.</p>
+        </div>
+        <div class="tier-grid">
+
+          <article class="tier reveal">
+            <h3>Klassik</h3>
+            <p class="tier-for">Solide verlegt</p>
+            <ul>
+              <li>Aufmaß und Verlegeplan</li>
+              <li>Handelsübliche Formate bis 120 × 120</li>
+              <li>Material aus dem Fachhandel oder von Ihnen gestellt</li>
+              <li>Saubere Fugen, Silikon, Schienen</li>
+              <li>Abnahme mit Protokoll</li>
+            </ul>
+            <p class="tier-price">Projekte ab<b>TODO €/m²</b></p>
+          </article>
+
+          <article class="tier reveal">
+            <h3>Design</h3>
+            <p class="tier-for">Geplant statt gelegt</p>
+            <ul>
+              <li>Alles aus Klassik</li>
+              <li>Achsplanung und Plattenspiegel am Rechner</li>
+              <li>Großformat bis 320 × 160</li>
+              <li>Gehrungskanten statt Aluschienen</li>
+              <li>Materialbeschaffung über unseren Import</li>
+              <li>Musterfläche vor Ort</li>
+            </ul>
+            <p class="tier-price">Projekte ab<b>TODO €/m²</b></p>
+          </article>
+
+          <article class="tier tier--signature reveal">
+            <h3>Signature</h3>
+            <p class="tier-for">Ein Stück Architektur</p>
+            <ul>
+              <li>Alles aus Design</li>
+              <li>Blockauswahl im Lager – Sie wählen Ihre Platte selbst</li>
+              <li>Buchmatch-Spiegelung über Wand und Boden</li>
+              <li>Wasserstrahl-Intarsie nach eigenem Entwurf</li>
+              <li>Hinterleuchteter Onyx, Waschtisch und Bank aus dem gleichen Stein</li>
+              <li>3D-Visualisierung vor Auftragserteilung</li>
+              <li>Ein fester Meister von Anfang bis Abnahme</li>
+              <li>Fünf Jahre Fugen- und Silikonwartung inklusive</li>
+            </ul>
+            <p class="tier-price">Projekte ab<b>TODO €</b></p>
+          </article>
+
+        </div>
+        <div class="cta-row reveal">
+          <a class="btn brass" href="#kontakt">Signature-Projekt besprechen <span class="arr">&rarr;</span></a>
+          <a class="btn ghost-light" href="#material">Woher das Material kommt</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- MATERIAL & IMPORT -->
+    <section class="import" id="material">
+      <div class="wrap">
+        <div class="import-grid">
+          <figure class="hero-frame reveal" style="margin:0;aspect-ratio:1/1">
+            <!-- Foto ersetzen: <img src="img/musterkoffer.jpg" alt="…" loading="lazy" /> -->
+            <div class="ph"><b>Platzhalter<br />Musterfliesen &amp; Steinplatten</b></div>
+          </figure>
+          <div class="reveal">
+            <span class="eyebrow">Material &amp; Direktimport</span>
+            <h2 class="head serif">Jede Fliese, die es gibt – auch die, die hier niemand führt.</h2>
+            <p class="muted">Die meisten Fliesenleger verlegen, was Sie im Baumarkt kaufen. Wir beschaffen selbst.
+              Das heißt: ein Ansprechpartner für Material und Verlegung, ein Preis, eine Verantwortung –
+              und Zugriff auf Serien, die in Berlin sonst niemand bekommt.</p>
+            <ul class="origin-list">
+              <li><b>Italien</b><span>Feinsteinzeug, Großformat, Marmoroptik – die technische Spitze</span></li>
+              <li><b>Spanien</b><span>Starkes Preis-Leistungs-Verhältnis, riesige Formatauswahl</span></li>
+              <li><b>Portugal</b><span>Azulejos, handbemalte Wandfliesen, Ornamentik</span></li>
+              <li><b>Marokko</b><span>Zellige und Bejmat, von Hand geschlagen, jede Fliese anders</span></li>
+              <li><b>Türkei &amp; Griechenland</b><span>Naturstein und Marmor direkt vom Bruch</span></li>
+              <li><b>Deutschland</b><span>Historische Zementfliesen, Nachfertigung nach Muster</span></li>
+            </ul>
+            <div class="price-span">
+              <b>Von 12 € bis 1.200 € pro Quadratmeter.</b>
+              <span>Wir arbeiten in beiden Richtungen. Sagen Sie uns Ihr Budget, dann sagen wir Ihnen ehrlich,
+                was darin geht – und wo sich der Aufpreis wirklich sehen lässt.</span>
+            </div>
+            <div class="cta-row">
+              <a class="btn" href="#kontakt">Muster anfordern <span class="arr">&rarr;</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HANDWERK / DETAILS -->
+    <section class="details" id="handwerk">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">Woran man gute Fliesenarbeit erkennt</span>
+          <h2 class="head serif">Vier Details, die den Unterschied ausmachen.</h2>
+          <p>Diese vier Punkte entscheiden, ob eine Fläche nach Handwerk aussieht oder nach Baumarkt.
+            Fragen Sie sie bei jedem Angebot ab – auch bei unseren Mitbewerbern.</p>
+        </div>
+        <div class="det-grid">
+          <article class="det reveal">
+            <h3>Gehrung statt Schiene</h3>
+            <p>An Außenecken schneiden wir beide Platten auf Gehrung, statt eine Aluschiene
+              davorzusetzen. Mehr Aufwand, aber die Kante verschwindet.</p>
+          </article>
+          <article class="det reveal">
+            <h3>Geplanter Plattenspiegel</h3>
+            <p>Vor dem ersten Schnitt steht der Verlegeplan: Wo sitzt die Achse, wo landet
+              der Schnitt, wie läuft die Fuge um die Nische. Keine Splitter in der Sichtachse.</p>
+          </article>
+          <article class="det reveal">
+            <h3>Durchlaufende Fuge</h3>
+            <p>Wand- und Bodenfuge treffen sich. Was selbstverständlich klingt, sieht man
+              in den meisten Bädern nicht – weil es Planung vor dem Einkauf verlangt.</p>
+          </article>
+          <article class="det reveal">
+            <h3>Abdichtung, die hält</h3>
+            <p>Verbundabdichtung nach Norm, Dichtbänder in jeder Ecke, Gefälle zum Ablauf.
+              Das sieht später niemand – und genau deshalb wird hier am meisten gespart.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABLAUF -->
+    <section id="ablauf">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">So läuft es ab</span>
+          <h2 class="head serif">Erst sehen, dann entscheiden.</h2>
+          <p>Bei einem Bad für fünfstellige Beträge ist die größte Sorge nicht der Preis,
+            sondern die Frage: Sieht das am Ende so aus, wie ich es mir vorstelle? Genau die nehmen wir Ihnen ab.</p>
+        </div>
+        <div class="ablauf-grid">
+          <article class="step reveal">
+            <h3>Gespräch</h3>
+            <p>Telefon oder Formular. Wir klären Raum, Budgetrahmen und was Ihnen wichtig ist.</p>
+          </article>
+          <article class="step reveal">
+            <h3>Aufmaß &amp; Bemusterung</h3>
+            <p>Wir messen auf und bringen Muster mit – echte Platten, nicht Katalogbilder.</p>
+          </article>
+          <article class="step reveal">
+            <h3>Plan &amp; Visualisierung</h3>
+            <p>Verlegeplan, Plattenspiegel und auf Wunsch eine 3D-Ansicht Ihres Raums.</p>
+          </article>
+          <article class="step reveal">
+            <h3>Musterachse</h3>
+            <p>Auf Wunsch legen wir vorab eine Musterfläche – Sie sehen Material, Fuge und Licht im Raum.</p>
+          </article>
+          <article class="step reveal">
+            <h3>Ausführung &amp; Abnahme</h3>
+            <p>Fester Meister, feste Termine, Übergabe mit Pflegeanleitung und Restmaterial.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJEKTE -->
+    <section class="projekte" id="projekte">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">Referenzen</span>
+          <h2 class="head serif">Zuletzt gelegt.</h2>
+          <p>Ein Ausschnitt aus den letzten Monaten.</p>
+          <!-- TODO: echte Projekte + Fotos eintragen. Foto einsetzen:
+               <div class="proj-media"><img src="img/projekt-1.jpg" alt="…" loading="lazy" /></div> -->
+        </div>
+        <div class="proj-grid">
+
+          <figure class="proj reveal">
+            <div class="proj-media"><div class="ph"><b>Platzhalter<br />Projektfoto</b></div></div>
+            <figcaption>
+              <b>Onyx-Bad, Charlottenburg</b>
+              <span>Hinterleuchtete Onyxwand mit Buchmatch-Spiegelung, Waschtisch und Bank aus demselben Block.</span>
+              <div class="tags"><span class="chip">Signature</span><span class="chip">Onyx</span><span class="chip">Buchmatch</span></div>
+            </figcaption>
+          </figure>
+
+          <figure class="proj reveal">
+            <div class="proj-media"><div class="ph"><b>Platzhalter<br />Projektfoto</b></div></div>
+            <figcaption>
+              <b>Gründerzeitflur, Prenzlauer Berg</b>
+              <span>Historischer Zementfliesenboden gereinigt, fehlende Felder nachgefertigt und eingesetzt.</span>
+              <div class="tags"><span class="chip">Altbau</span><span class="chip">Restaurierung</span><span class="chip">Denkmal</span></div>
+            </figcaption>
+          </figure>
+
+          <figure class="proj reveal">
+            <div class="proj-media"><div class="ph"><b>Platzhalter<br />Projektfoto</b></div></div>
+            <figcaption>
+              <b>Zellige-Küche, Kreuzberg</b>
+              <span>Handgeschlagenes Zellige aus Fès, von Hand gesetzt – jede Fliese mit eigener Glasur.</span>
+              <div class="tags"><span class="chip">Zellige</span><span class="chip">Import</span><span class="chip">Küche</span></div>
+            </figcaption>
+          </figure>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- WARTUNG -->
+    <section class="wartung" id="wartung">
+      <div class="wrap">
+        <div class="wart-grid">
+          <div class="reveal">
+            <span class="eyebrow">Wartung &amp; Pflege</span>
+            <h2 class="head">Ein Bad ist fertig. Eine Fuge nie.</h2>
+            <div class="sec-head" style="margin-bottom:22px">
+              <p>Silikon altert, Fugen reißen, und der teuerste Wasserschaden beginnt als Haarriss,
+                den niemand sieht. Wir kommen einmal im Jahr vorbei und halten das Bad dicht –
+                bei Signature-Projekten fünf Jahre lang inklusive.</p>
+            </div>
+            <ul class="wart-list">
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                <span><b>Jährliche Bad-Inspektion</b><span>Fugen, Silikon, Anschlüsse und Gefälle im Blick</span></span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 16h16"/><path d="M6 16V9l6-5 6 5v7"/></svg>
+                <span><b>Silikonwartung</b><span>Alte Fugen raus, neue rein – bevor es dahinter arbeitet</span></span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3c2.6 3.2 4 5.7 4 8a4 4 0 0 1-8 0c0-2.3 1.4-4.8 4-8Z"/></svg>
+                <span><b>Naturstein-Pflege</b><span>Imprägnierung auffrischen, Kalk und Flecken fachgerecht lösen</span></span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M21 3v6h-6"/></svg>
+                <span><b>Reparatur einzelner Fliesen</b><span>Wir legen Restmaterial zurück – auch nach Jahren passt es noch</span></span>
+              </li>
+            </ul>
+            <div class="cta-row">
+              <a class="btn brass" href="#kontakt">Wartung anfragen <span class="arr">&rarr;</span></a>
+            </div>
+          </div>
+          <figure class="hero-frame reveal" style="margin:0;aspect-ratio:3/4">
+            <!-- Foto ersetzen: <img src="img/wartung.jpg" alt="…" loading="lazy" /> -->
+            <div class="ph"><b>Platzhalter<br />Detailfoto Fuge</b></div>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- GEBIET -->
+    <section id="gebiet">
+      <div class="wrap">
+        <div class="gebiet-grid">
+          <div class="reveal">
+            <span class="eyebrow">Einsatzgebiet</span>
+            <h2 class="head serif">Berlin und der nahe Speckgürtel.</h2>
+            <p class="muted">Wir arbeiten in allen Berliner Bezirken und im angrenzenden Brandenburg.
+              Kurze Wege heißt: Wir sind zur Bemusterung schnell da – und für die Wartung auch Jahre später noch.</p>
+            <div class="bezirke">
+              <span class="chip">Mitte</span><span class="chip">Prenzlauer Berg</span><span class="chip">Friedrichshain</span>
+              <span class="chip">Kreuzberg</span><span class="chip">Neukölln</span><span class="chip">Charlottenburg</span>
+              <span class="chip">Wilmersdorf</span><span class="chip">Schöneberg</span><span class="chip">Steglitz</span>
+              <span class="chip">Zehlendorf</span><span class="chip">Tempelhof</span><span class="chip">Pankow</span>
+              <span class="chip">Lichtenberg</span><span class="chip">Spandau</span><span class="chip">Reinickendorf</span>
+              <span class="chip">Treptow-Köpenick</span><span class="chip">Potsdam &amp; Umland</span>
+            </div>
+            <div class="cta-row">
+              <a class="btn" href="#kontakt">Termin zur Bemusterung <span class="arr">&rarr;</span></a>
+            </div>
+          </div>
+          <figure class="hero-frame reveal" style="margin:0;aspect-ratio:1/1">
+            <!-- Foto ersetzen: <img src="img/team.jpg" alt="…" loading="lazy" /> -->
+            <div class="ph"><b>Platzhalter<br />Team- oder Werkstattfoto</b></div>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- KONTAKT -->
+    <section class="kontakt" id="kontakt">
+      <div class="wrap">
+        <div class="kontakt-grid">
+          <div class="reveal">
+            <span class="eyebrow">Beratung anfragen</span>
+            <h2 class="head">Erzählen Sie uns von Ihrem Raum.</h2>
+            <div class="sec-head" style="margin-bottom:26px">
+              <p>Kurz beschreiben, was ansteht – wir melden uns innerhalb eines Werktags
+                mit Rückfragen oder einem Terminvorschlag zur Bemusterung.</p>
+            </div>
+
+            <!-- Das Formular öffnet das E-Mail-Programm (funktioniert ohne Server auf GitHub Pages).
+                 Für echten Versand: action auf einen Formulardienst setzen, z. B.
+                 <form action="https://formspree.io/f/DEINE-ID" method="POST"> und das JS unten entfernen. -->
+            <form id="anfrage" novalidate>
+              <div class="form-row">
+                <div class="field">
+                  <label for="f-name">Name</label>
+                  <input id="f-name" name="name" type="text" autocomplete="name" required />
+                </div>
+                <div class="field">
+                  <label for="f-tel">Telefon</label>
+                  <input id="f-tel" name="telefon" type="tel" autocomplete="tel" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="field">
+                  <label for="f-mail">E-Mail</label>
+                  <input id="f-mail" name="email" type="email" autocomplete="email" required />
+                </div>
+                <div class="field">
+                  <label for="f-art">Worum geht es?</label>
+                  <select id="f-art" name="projektart">
+                    <option>Bad komplett</option>
+                    <option>Fliesen verlegen (Wand/Boden)</option>
+                    <option>Naturstein oder Onyx</option>
+                    <option>Großformat / XXL</option>
+                    <option>Fliesenkunst, Mosaik, Zellige</option>
+                    <option>Altbau- oder Denkmalfliesen</option>
+                    <option>Materialbeschaffung / Import</option>
+                    <option>Wartung, Fugen, Reparatur</option>
+                    <option>Trockenbau</option>
+                    <option>Sonstiges</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="field">
+                  <label for="f-ort">Ort des Projekts</label>
+                  <input id="f-ort" name="ort" type="text" placeholder="Straße, Bezirk" />
+                </div>
+                <div class="field">
+                  <label for="f-linie">Atelier-Linie</label>
+                  <select id="f-linie" name="linie">
+                    <option>Noch offen – bitte beraten</option>
+                    <option>Klassik</option>
+                    <option>Design</option>
+                    <option>Signature</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field">
+                <label for="f-text">Was schwebt Ihnen vor?</label>
+                <textarea id="f-text" name="nachricht" placeholder="Fläche, Raumhöhe, Wunschmaterial, Budgetrahmen, Wunschtermin – alles, was hilft."></textarea>
+              </div>
+              <button class="btn brass" type="submit">Anfrage senden <span class="arr">&rarr;</span></button>
+              <p class="form-note" id="form-status" role="status">
+                Mit dem Absenden stimmen Sie der Verarbeitung Ihrer Angaben zur Bearbeitung der Anfrage zu.
+                Mehr dazu in der <a href="datenschutz.html">Datenschutzerklärung</a>.
+              </p>
+            </form>
+          </div>
+
+          <div class="reveal">
+            <ul class="kdaten">
+              <!-- TODO: echte Kontaktdaten eintragen -->
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>
+                </svg>
+                <span><b>Telefon</b><a href="tel:+493000000000">030 000 000 00</a></span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>
+                </svg>
+                <span><b>E-Mail</b><a href="mailto:info@example.de">info@example.de</a></span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/>
+                </svg>
+                <span><b>Atelier &amp; Musterraum</b>Musterstraße 12<br />10115 Berlin</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+                </svg>
+                <span><b>Bemusterung</b>Mo – Fr 9:00 – 18:00 Uhr<br />Sa nach Vereinbarung</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot-top">
+        <div>
+          <span class="wordmark" style="font-size:1.4rem">Fliesenatelier Berlin</span>
+          <div class="foot-tag">Fliesen · Naturstein · Import · Trockenbau</div>
+        </div>
+        <div class="foot-links">
+          <a href="tel:+493000000000">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>
+            </svg> 030 000 000 00
+          </a>
+          <a href="mailto:info@example.de">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>
+            </svg> info@example.de
+          </a>
+          <a href="#kontakt">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M4 20h16"/><path d="m6 16 8-8 4 4-8 8H6v-4Z"/>
+            </svg> Beratung anfragen
+          </a>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>Musterstraße 12 · 10115 Berlin</span>
+        <span><a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a> · Fliesen seit 2010</span>
+      </div>
+    </div>
+  </footer>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HomeAndConstructionBusiness",
+    "name": "Fliesenatelier Berlin",
+    "description": "Fliesenatelier in Berlin: Verlegung, Fliesenkunst und Intarsien, Naturstein und Großformat, Altbau-Restaurierung, Fugenwartung und eigener Direktimport.",
+    "areaServed": "Berlin",
+    "telephone": "+49 30 000 000 00",
+    "email": "info@example.de",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Musterstraße 12",
+      "postalCode": "10115",
+      "addressLocality": "Berlin",
+      "addressCountry": "DE"
+    },
+    "openingHours": "Mo-Fr 09:00-18:00",
+    "knowsAbout": [
+      "Fliesen verlegen", "Naturstein", "Onyx", "Großformat", "Mosaik", "Intarsie",
+      "Zellige", "Historische Zementfliesen", "Badsanierung", "Fugensanierung", "Trockenbau"
+    ]
+  }
+  </script>
+
+  <script>
+    // sticky nav + scroll progress
+    const nav = document.getElementById('nav');
+    const progress = document.getElementById('progress');
+
+    // mobile hamburger
+    const ham = document.getElementById('nav-ham');
+    const drawer = document.getElementById('nav-drawer');
+    if (ham && drawer) {
+      ham.addEventListener('click', () => {
+        const isOpen = nav.classList.toggle('open');
+        ham.setAttribute('aria-expanded', String(isOpen));
+        ham.setAttribute('aria-label', isOpen ? 'Menü schließen' : 'Menü öffnen');
+      });
+      drawer.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          nav.classList.remove('open');
+          ham.setAttribute('aria-expanded', 'false');
+          ham.setAttribute('aria-label', 'Menü öffnen');
+        });
+      });
+    }
+
+    const onScroll = () => {
+      nav.classList.toggle('stuck', window.scrollY > 24);
+      const h = document.documentElement;
+      const p = h.scrollTop / (h.scrollHeight - h.clientHeight || 1);
+      progress.style.transform = 'scaleX(' + Math.min(p, 1) + ')';
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // scroll reveals
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) {
+            e.target.style.transitionDelay = (Math.min(i, 4) * 70) + 'ms';
+            e.target.classList.add('in');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.14, rootMargin: '0px 0px -8% 0px' });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    } else {
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+    }
+
+    // Anfrageformular -> mailto (kein Server nötig).
+    // Wird das <form> auf einen Formulardienst umgestellt, diesen Block löschen.
+    const form = document.getElementById('anfrage');
+    const status = document.getElementById('form-status');
+    // TODO: Empfängeradresse eintragen
+    const EMPFAENGER = 'info@example.de';
+
+    if (form) {
+      form.addEventListener('submit', (ev) => {
+        ev.preventDefault();
+        const d = new FormData(form);
+        const get = (k) => (d.get(k) || '').toString().trim();
+
+        if (!get('name') || !get('email')) {
+          status.textContent = 'Bitte Name und E-Mail ausfüllen, damit wir antworten können.';
+          (get('name') ? form.querySelector('#f-mail') : form.querySelector('#f-name')).focus();
+          return;
+        }
+
+        const betreff = 'Anfrage: ' + get('projektart') + ' (' + get('linie') + ')';
+        const text = [
+          'Name: ' + get('name'),
+          'Telefon: ' + get('telefon'),
+          'E-Mail: ' + get('email'),
+          'Thema: ' + get('projektart'),
+          'Atelier-Linie: ' + get('linie'),
+          'Ort: ' + get('ort'),
+          '',
+          get('nachricht')
+        ].join('\n');
+
+        window.location.href = 'mailto:' + EMPFAENGER +
+          '?subject=' + encodeURIComponent(betreff) +
+          '&body=' + encodeURIComponent(text);
+
+        status.textContent = 'Ihr E-Mail-Programm wurde geöffnet. Klappt das nicht, schreiben Sie uns direkt an ' + EMPFAENGER + '.';
+      });
+    }
+  </script>
+</body>
+
+</html>

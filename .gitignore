@@ -1,0 +1,4 @@
+# Agenten-Werkzeug, gehört nicht auf die veröffentlichte Website
+.agents/
+.claude/
+skills-lock.json

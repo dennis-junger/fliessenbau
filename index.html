@@ -15,6 +15,10 @@
   <meta name="theme-color" content="#14171A" />
   <link rel="icon" href="img/logo.svg" type="image/svg+xml" />
 
+  <!-- Markiert, dass JavaScript läuft. Nur dann werden Inhalte für die
+       Eintritts-Animation ausgeblendet – ohne JS bleibt alles sichtbar. -->
+  <script>document.documentElement.classList.add('js');</script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <!-- Schriften nicht render-blockierend laden: der Text erscheint sofort in der
@@ -64,6 +68,10 @@
 
       --ease: cubic-bezier(.22, 1, .36, 1);
       --dur: .5s;
+
+      /* Eintritts-Animation */
+      --reveal-dur: .7s;
+      --reveal-stagger: 70ms;
     }
 
     * { box-sizing: border-box; }
@@ -272,16 +280,27 @@
     .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
 
     /* ============ REVEAL ============ */
-    .reveal {
-      opacity: 0; transform: translateY(22px);
-      transition: opacity .7s var(--ease), transform .7s var(--ease);
+    /* Der Eintritt läuft als Animation, nicht als Transition. Sonst teilt er sich
+       die transform-Transition mit dem Hover der Karten – dann gilt nur eine Dauer
+       für beides, und die Verzögerung des Eintritts bremst später den Hover. */
+    .js .reveal { opacity: 0; }
+
+    .reveal.in {
+      animation: reveal-in var(--reveal-dur) var(--ease) var(--stagger, 0ms) both;
     }
 
-    .reveal.in { opacity: 1; transform: none; }
+    /* Nach dem Eintritt die Animation entfernen, damit sie Hover-Zustände
+       (transform, box-shadow) nicht dauerhaft überschreibt. */
+    .reveal.done { opacity: 1; animation: none; }
+
+    @keyframes reveal-in {
+      from { opacity: 0; transform: translateY(22px); }
+      to { opacity: 1; transform: none; }
+    }
 
     @media (prefers-reduced-motion: reduce) {
       * { animation: none !important; transition-duration: .01ms !important; }
-      .reveal { opacity: 1; transform: none; }
+      .reveal, .reveal.in { opacity: 1; transform: none; }
       html { scroll-behavior: auto; }
       ::view-transition-group(*),
       ::view-transition-old(*),
@@ -1425,20 +1444,38 @@
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
 
-    // scroll reveals
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((e, i) => {
-          if (e.isIntersecting) {
-            e.target.style.transitionDelay = (Math.min(i, 4) * 70) + 'ms';
-            e.target.classList.add('in');
-            io.unobserve(e.target);
-          }
-        });
-      }, { threshold: 0.14, rootMargin: '0px 0px -8% 0px' });
-      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    // Eintritts-Animationen beim Scrollen
+    const reveals = document.querySelectorAll('.reveal');
+    const mag = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    if (!('IntersectionObserver' in window) || mag.matches) {
+      reveals.forEach(el => el.classList.add('in', 'done'));
     } else {
-      document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+      // Die Verzögerung steht vorab fest: jedes Element bekommt seinen Platz
+      // innerhalb der eigenen Gruppe (Geschwisterelemente im selben Container).
+      // Vorher kam sie aus der Reihenfolge im entries-Array – die hängt davon ab,
+      // wie der Browser die Einträge bündelt, also von der Scrollgeschwindigkeit.
+      const MAX_STUFEN = 5;
+      reveals.forEach(el => {
+        const gruppe = [...el.parentElement.children].filter(c => c.classList.contains('reveal'));
+        const platz = Math.min(gruppe.indexOf(el), MAX_STUFEN - 1);
+        el.style.setProperty('--stagger', 'calc(var(--reveal-stagger) * ' + platz + ')');
+      });
+
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      }, { threshold: 0.14, rootMargin: '0px 0px -8% 0px' });
+
+      reveals.forEach(el => {
+        el.addEventListener('animationend', (ev) => {
+          if (ev.animationName === 'reveal-in') el.classList.add('done');
+        }, { once: true });
+        io.observe(el);
+      });
     }
 
     // Anfrageformular -> mailto (kein Server nötig).

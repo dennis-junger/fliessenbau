@@ -14,6 +14,7 @@
   <meta property="og:url" content="https://example.de/" />
   <meta name="theme-color" content="#14171A" />
   <link rel="icon" href="img/logo.svg" type="image/svg+xml" />
+  <link rel="preload" as="image" href="img/muster-intarsie.svg" />
 
   <!-- Markiert, dass JavaScript läuft. Nur dann werden Inhalte für die
        Eintritts-Animation ausgeblendet – ohne JS bleibt alles sichtbar. -->
@@ -373,6 +374,8 @@
 
     .hero-frame img, .proj-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
+    figure.hero-frame img { border-radius: inherit; }
+
     /* Foto-Platzhalter in Fliesenspiegel-Optik.
        Zum Ersetzen einfach ein <img src="img/…"> statt des .ph-Elements einsetzen. */
     .ph {
@@ -624,7 +627,20 @@
 
     .proj:hover { transform: translateY(-5px); box-shadow: var(--e2); }
 
-    .proj-media { aspect-ratio: 4 / 3; }
+    .proj-media { aspect-ratio: 4 / 3; position: relative; }
+
+    /* Solange hier noch keine echten Projektfotos liegen, muss sichtbar sein,
+       dass es Beispielgrafiken sind - sonst behauptet die Seite Arbeiten,
+       die es so nicht gab. Nach dem Einsetzen echter Fotos entfernen. */
+    .beispiel {
+      position: absolute; left: 10px; bottom: 10px;
+      background: rgba(20, 23, 26, .78); color: var(--chalk);
+      font-family: "Barlow Condensed", sans-serif;
+      text-transform: uppercase; letter-spacing: .14em;
+      font-size: .66rem; font-weight: 600;
+      padding: 5px 10px; border-radius: 2px;
+      backdrop-filter: blur(4px);
+    }
 
     .proj figcaption { padding: 20px 22px 24px; }
 
@@ -841,8 +857,9 @@
           <div class="hero-media reveal">
             <div class="hero-badge">Jede Fliese<br />der Welt<br />beschaffbar</div>
             <div class="hero-frame">
-              <!-- Foto ersetzen: <img src="img/hero-bad.jpg" alt="…" /> -->
-              <div class="ph"><b>Platzhalter<br />Bad in Naturstein</b></div>
+              <!-- Beispielgrafik. Durch ein eigenes Foto ersetzen:
+                   <img src="img/hero-bad.jpg" alt="Fertiges Bad in Naturstein" width="840" height="1050" /> -->
+              <img src="img/muster-intarsie.svg" alt="Achteck-Stern-Intarsie aus geschnittenen Fliesen" width="840" height="1050" loading="eager" decoding="async" />
             </div>
           </div>
         </div>
@@ -1035,8 +1052,8 @@
       <div class="wrap">
         <div class="import-grid">
           <figure class="hero-frame reveal" style="margin:0;aspect-ratio:1/1">
-            <!-- Foto ersetzen: <img src="img/musterkoffer.jpg" alt="…" loading="lazy" /> -->
-            <div class="ph"><b>Platzhalter<br />Musterfliesen &amp; Steinplatten</b></div>
+            <!-- Beispielgrafik, durch ein Foto der Musterfliesen ersetzen -->
+            <img src="img/muster-zellige.svg" alt="Handgeschlagene Zellige-Fliesen mit unregelmäßiger Glasur" width="800" height="1000" loading="lazy" decoding="async" />
           </figure>
           <div class="reveal">
             <span class="eyebrow">Material &amp; Direktimport</span>
@@ -1146,7 +1163,7 @@
         <div class="proj-grid">
 
           <figure class="proj reveal">
-            <div class="proj-media"><div class="ph"><b>Platzhalter<br />Projektfoto</b></div></div>
+            <div class="proj-media"><img src="img/muster-marmor.svg" alt="Marmor mit gespiegelter Maserung (Buchmatch)" width="900" height="1100" loading="lazy" decoding="async" /><span class="beispiel">Beispielbild</span></div>
             <figcaption>
               <b>Onyx-Bad, Charlottenburg</b>
               <span>Hinterleuchtete Onyxwand mit Buchmatch-Spiegelung, Waschtisch und Bank aus demselben Block.</span>
@@ -1155,7 +1172,7 @@
           </figure>
 
           <figure class="proj reveal">
-            <div class="proj-media"><div class="ph"><b>Platzhalter<br />Projektfoto</b></div></div>
+            <div class="proj-media"><img src="img/muster-ornament.svg" alt="Ornamentboden nach Gründerzeit-Vorbild" width="840" height="840" loading="lazy" decoding="async" /><span class="beispiel">Beispielbild</span></div>
             <figcaption>
               <b>Gründerzeitflur, Prenzlauer Berg</b>
               <span>Historischer Zementfliesenboden gereinigt, fehlende Felder nachgefertigt und eingesetzt.</span>
@@ -1164,7 +1181,7 @@
           </figure>
 
           <figure class="proj reveal">
-            <div class="proj-media"><div class="ph"><b>Platzhalter<br />Projektfoto</b></div></div>
+            <div class="proj-media"><img src="img/muster-zellige.svg" alt="Handgesetztes Zellige mit lebendiger Glasur" width="800" height="1000" loading="lazy" decoding="async" /><span class="beispiel">Beispielbild</span></div>
             <figcaption>
               <b>Zellige-Küche, Kreuzberg</b>
               <span>Handgeschlagenes Zellige aus Fès, von Hand gesetzt – jede Fliese mit eigener Glasur.</span>
@@ -1211,8 +1228,8 @@
             </div>
           </div>
           <figure class="hero-frame reveal" style="margin:0;aspect-ratio:3/4">
-            <!-- Foto ersetzen: <img src="img/wartung.jpg" alt="…" loading="lazy" /> -->
-            <div class="ph"><b>Platzhalter<br />Detailfoto Fuge</b></div>
+            <!-- Beispielgrafik, durch ein Detailfoto einer Fuge ersetzen -->
+            <img src="img/muster-hexagon.svg" alt="Hexagon-Mosaik mit dichtem Fugennetz" width="800" height="800" loading="lazy" decoding="async" />
           </figure>
         </div>
       </div>
@@ -1240,8 +1257,8 @@
             </div>
           </div>
           <figure class="hero-frame reveal" style="margin:0;aspect-ratio:1/1">
-            <!-- Foto ersetzen: <img src="img/team.jpg" alt="…" loading="lazy" /> -->
-            <div class="ph"><b>Platzhalter<br />Team- oder Werkstattfoto</b></div>
+            <!-- Beispielgrafik, durch ein Team- oder Werkstattfoto ersetzen -->
+            <img src="img/muster-terrazzo.svg" alt="Terrazzo mit eingestreuten Gesteinssplittern" width="800" height="800" loading="lazy" decoding="async" />
           </figure>
         </div>
       </div>

@@ -13,6 +13,7 @@ Rechtsseiten separat. Zum Ändern reicht ein Texteditor, es muss nichts kompilie
 | `impressum.html` | Impressum (mit Platzhaltern) |
 | `datenschutz.html` | Datenschutzerklärung (auf GitHub Pages + Google Fonts + mailto-Formular zugeschnitten) |
 | `img/logo.svg` | Logo/Favicon |
+| `img/muster-*.svg` | Sechs selbst erzeugte Fliesenmuster als Beispielbilder (Intarsie, Zellige, Marmor-Buchmatch, Ornament, Hexagon, Terrazzo) |
 | `.nojekyll` | Schaltet die Jekyll-Verarbeitung auf GitHub Pages ab – die Seite wird 1:1 ausgeliefert |
 | `MARKTANALYSE.md` | Wettbewerbsrecherche Berlin: Anzahl Anbieter, ihre Schlagwörter, Kundengewinnung, fünf unbesetzte Positionierungen |
 
@@ -38,16 +39,46 @@ Wettbewerbsdaten stehen in `MARKTANALYSE.md`.
 
 ## Fotos einsetzen
 
-Fotos liegen unter `img/`. Die grauen Flächen sind Platzhalter (`<div class="ph">`) – einfach ersetzen:
+Auf der Seite liegen aktuell selbst erzeugte Fliesenmuster als Beispielbilder.
+Sie sind lizenzfrei, laden schnell und passen zum Thema – ersetzen aber keine
+echten Fotos. Sobald welche da sind, einfach das `src` austauschen:
 
 ```html
 <!-- vorher -->
-<div class="proj-media"><div class="ph"><b>Platzhalter<br />Projektfoto</b></div></div>
+<img src="img/muster-marmor.svg" alt="Marmor mit gespiegelter Maserung (Buchmatch)"
+     width="900" height="1100" loading="lazy" decoding="async" />
 <!-- nachher -->
-<div class="proj-media"><img src="img/projekt-1.jpg" alt="Neue Ständerwände im Rohbau" loading="lazy" /></div>
+<img src="img/projekt-1.jpg" alt="Fertiges Onyx-Bad mit hinterleuchteter Wand"
+     width="1600" height="2000" loading="lazy" decoding="async" />
 ```
 
-Bilder vorher auf ca. 1600 px Breite verkleinern und als JPG speichern (unter ~300 KB je Bild).
+`width` und `height` immer mitangeben – sonst springt das Layout beim Laden.
+Bilder vorher auf ca. 1600 px Breite verkleinern und als JPG speichern
+(unter ~300 KB je Bild).
+
+### Wichtig: die drei Projektkarten
+
+Die Karten unter „Zuletzt gelegt“ tragen eine sichtbare Kennzeichnung
+**Beispielbild**. Das muss so bleiben, solange dort keine echten eigenen
+Projektfotos liegen – sonst behauptet die Seite Arbeiten, die es so nicht gab.
+Beim Einsetzen echter Fotos das jeweilige
+`<span class="beispiel">Beispielbild</span>` mit entfernen.
+
+### Wenn du doch Stockfotos nehmen willst
+
+Kostenlos und auch gewerblich nutzbar, ohne Namensnennungspflicht:
+
+- [Unsplash](https://unsplash.com) – Unsplash-Lizenz
+- [Pexels](https://pexels.com) – Pexels-Lizenz
+- [Pixabay](https://pixabay.com) – Pixabay Content License
+
+Brauchbare Suchbegriffe: `bathroom tiles`, `marble bathroom`, `terrazzo floor`,
+`zellige`, `tiler working`, `mosaic tile`. Bilder herunterladen und nach `img/`
+legen – nicht per Link einbinden, sonst geht die IP jedes Besuchers an den
+Anbieter und die Datenschutzerklärung müsste ergänzt werden.
+
+Auch hier gilt: Stockfotos gehören nicht in die Referenzen. Ein Kunde, der dort
+ein fremdes Bad sieht, glaubt, es sei deines.
 
 ## Anfrageformular
 

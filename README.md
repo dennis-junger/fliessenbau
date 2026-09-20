@@ -12,6 +12,9 @@ Rechtsseiten separat. Zum Ändern reicht ein Texteditor, es muss nichts kompilie
 | `index.html` | Startseite: Hero, Leistungen, Atelier-Linie (Klassik/Design/Signature), Material & Direktimport, Handwerksdetails, Ablauf, Projekte, Wartung, Einsatzgebiet, Anfrageformular, Footer |
 | `impressum.html` | Impressum (mit Platzhaltern) |
 | `datenschutz.html` | Datenschutzerklärung (auf GitHub Pages + Google Fonts + mailto-Formular zugeschnitten) |
+| `agb.html` | Allgemeine Geschäftsbedingungen |
+| `widerruf.html` | Widerrufsbelehrung + Muster-Widerrufsformular |
+| `en/` | Englische Fassung: `index.html`, `imprint.html`, `privacy.html`, `terms.html`, `withdrawal.html` |
 | `img/logo.svg` | Logo/Favicon |
 | `img/muster-*.svg` | Sechs selbst erzeugte Fliesenmuster als Beispielbilder (Intarsie, Zellige, Marmor-Buchmatch, Ornament, Hexagon, Terrazzo) |
 | `.nojekyll` | Schaltet die Jekyll-Verarbeitung auf GitHub Pages ab – die Seite wird 1:1 ausgeliefert |
@@ -29,6 +32,44 @@ Alle Stellen sind im Code mit `TODO` markiert (`grep -rn TODO .`):
 - **Domain** – `og:url` im `<head>`
 - **Referenzprojekte** – die drei Karten unter „Zuletzt gelegt“
 - **Impressum**: Handelsregister, USt-ID, Handwerkskammer, Handwerksrolle, Versicherung
+
+## Rechtstexte
+
+Vier Seiten, alle mit Platzhaltern und alle **vor dem Livegang anwaltlich zu prüfen**:
+
+| Seite | Pflicht? | Warum sie da ist |
+|---|---|---|
+| Impressum | ja, § 5 DDG | Fehlt es oder ist es unvollständig, ist das abmahnfähig |
+| Datenschutzerklärung | ja, Art. 13 DSGVO | Deckt GitHub Pages, Google Fonts und das Formular ab |
+| Widerrufsbelehrung | ja, sobald Verträge beim Kunden geschlossen werden | Siehe unten – der kritischste Punkt |
+| AGB | nein | Regeln Abnahme, Zahlung und Materialabweichungen im Streitfall |
+
+### Zur Widerrufsbelehrung
+
+Handwerksverträge werden meist beim Kunden zu Hause geschlossen. Das sind außerhalb
+von Geschäftsräumen geschlossene Verträge nach § 312b BGB, und dafür gilt ein
+14-tägiges Widerrufsrecht. Zwei Dinge sind praktisch entscheidend:
+
+1. **Eine fehlerhafte Belehrung ist schlimmer als gar keine.** Die Frist beginnt dann
+   nicht zu laufen und verlängert sich auf bis zu zwölf Monate und 14 Tage.
+2. **Soll vor Ablauf der 14 Tage mit den Arbeiten begonnen werden**, braucht es die
+   ausdrückliche schriftliche Zustimmung des Kunden – am besten als eigener,
+   unterschriebener Absatz im Auftrag. Ohne sie kann der Kunde auch nach Fertigstellung
+   noch widerrufen, und der Vergütungsanspruch kann ganz entfallen.
+
+Die Handwerkskammer Berlin bietet dazu eine Erstberatung an.
+
+## Zweisprachigkeit
+
+Die englische Fassung liegt als eigene Dateien unter `en/` – nicht als
+JavaScript-Umschalter. Das ist bewusst so: Nur getrennte Adressen werden von
+Suchmaschinen getrennt indexiert, und Berlin hat viele englischsprachige
+Wohnungseigentümer und Mieter. `hreflang`-Angaben auf beiden Seiten sagen Google,
+welche Fassung zu welcher Sprache gehört.
+
+**Der Preis dafür:** Jede inhaltliche Änderung muss in beiden Fassungen gemacht werden.
+Bei den Rechtstexten steht auf jeder englischen Seite ein Hinweis, dass die deutsche
+Fassung die rechtlich verbindliche ist – die englische ist eine Lesehilfe.
 
 ## Positionierung
 

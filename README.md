@@ -139,21 +139,33 @@ um den Dienst als Auftragsverarbeiter ergänzen.
 
 ## Veröffentlichen mit GitHub Pages
 
-Einmalig einschalten – danach ist jeder Push auf `main` automatisch live:
+Das Repository ist privat. Dafür braucht GitHub Pages einen kostenpflichtigen
+Plan (**GitHub Pro**, ca. 4 $/Monat) – im kostenlosen Plan lässt sich Pages bei
+privaten Repositories nicht einschalten.
 
-1. Im Repository auf **Settings** (oben rechts im Reitermenü)
-2. Links in der Seitenleiste auf **Pages**
-3. Unter **Build and deployment → Source**: **Deploy from a branch**
-4. Branch: **main**, Ordner: **/ (root)** → **Save**
+Einmalig einrichten:
 
-Nach ein bis zwei Minuten läuft die Seite unter:
+1. **Settings → Pages → Build and deployment → Source: GitHub Actions**
+   (nicht „Deploy from a branch“)
+2. Fertig. Jeder Push auf `main` veröffentlicht automatisch neu.
 
-```
-https://dennis-junger.github.io/fliessenbau/
-```
+Die Seite läuft danach unter `https://dennis-junger.github.io/fliessenbau/`.
+Den Fortschritt siehst du im Reiter **Actions**.
 
-Der Status des Deployments steht im Reiter **Actions**, und auf der Pages-Seite
-erscheint oben ein grüner Kasten mit der fertigen Adresse.
+### Warum ein Workflow statt des einfachen Branch-Deployments
+
+GitHub Pages liefert normalerweise **jede** Datei aus dem Branch aus – auch bei
+privatem Repository. `MARKTANALYSE.md` wäre damit öffentlich abrufbar, samt
+Wettbewerbertabelle und Positionierungsstrategie.
+
+`.github/workflows/pages.yml` kopiert deshalb nur die Website-Dateien in die
+Veröffentlichung und lässt `MARKTANALYSE.md`, `README.md` und die
+Werkzeugordner draußen. Ein Prüfschritt bricht den Deploy ab, falls doch eine
+interne Datei mitgehen würde, und prüft gleichzeitig, dass beide Startseiten
+vorhanden sind. Lieber ein fehlgeschlagener Deploy als die Strategie im Netz.
+
+Wenn du später eine Datei bewusst mitveröffentlichen willst, nimm sie aus der
+`--exclude`-Liste im Workflow heraus.
 
 ### Eigene Domain
 

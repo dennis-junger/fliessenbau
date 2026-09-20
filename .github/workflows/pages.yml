@@ -1,0 +1,69 @@
+name: Website veröffentlichen
+
+# Läuft bei jedem Push auf main und lässt sich im Reiter "Actions"
+# auch von Hand starten.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Nie zwei Veröffentlichungen gleichzeitig
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  bauen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Nur die Website-Dateien einsammeln
+        run: |
+          mkdir -p _site
+          # tar statt rsync: ist ueberall vorhanden, also auch lokal testbar
+          tar -cf - \
+            --exclude='./.git' \
+            --exclude='./.github' \
+            --exclude='./.gitignore' \
+            --exclude='./_site' \
+            --exclude='./.agents' \
+            --exclude='./.claude' \
+            --exclude='./skills-lock.json' \
+            --exclude='./MARKTANALYSE.md' \
+            --exclude='./README.md' \
+            . | tar -xf - -C _site
+
+      # Sicherheitsnetz: bricht ab, falls doch eine interne Datei mitgeht.
+      # Besser ein fehlgeschlagener Deploy als die Strategie oeffentlich im Netz.
+      - name: Pruefen, dass nichts Internes mitkommt
+        run: |
+          for f in MARKTANALYSE.md README.md skills-lock.json; do
+            if [ -e "_site/$f" ]; then
+              echo "FEHLER: $f wuerde veroeffentlicht werden."
+              exit 1
+            fi
+          done
+          test -f _site/index.html    || { echo "FEHLER: index.html fehlt."; exit 1; }
+          test -f _site/en/index.html || { echo "FEHLER: en/index.html fehlt."; exit 1; }
+          echo "Veroeffentlicht werden:"
+          find _site -type f | sort | sed 's|^_site/|  |'
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  veroeffentlichen:
+    needs: bauen
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

@@ -3,10 +3,12 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content" />
   <title>Imprint · Tile Atelier Berlin</title>
   <meta name="description" content="Imprint – Tile Atelier Berlin." />
   <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#F6F3EE" />
+  <meta name="color-scheme" content="light" />
   <link rel="icon" href="../img/logo.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -35,6 +37,19 @@
     }
 
     * { box-sizing: border-box; }
+
+    html {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    a, button { touch-action: manipulation; }
+
+    .brand, .back, .cross a, footer a {
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
 
     body {
       margin: 0;

@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content" />
   <title>Tile Atelier Berlin · Tiles, Natural Stone &amp; Direct Import</title>
   <meta name="description"
     content="Tile atelier in Berlin: installation, tile art and inlays, natural stone and large format, period-building restoration, joint maintenance – with our own direct import. From budget to onyx." />
@@ -12,7 +12,8 @@
     content="Tiles as design: inlays, book-match, zellige, large format. Our own import from Italy, Spain, Portugal, Morocco and Turkey." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://example.de/en/" />
-  <meta name="theme-color" content="#14171A" />
+  <meta name="theme-color" content="#F6F3EE" />
+  <meta name="color-scheme" content="light" />
   <link rel="alternate" hreflang="de" href="../" />
   <link rel="alternate" hreflang="en" href="./" />
   <link rel="alternate" hreflang="x-default" href="../" />
@@ -81,7 +82,25 @@
 
     * { box-sizing: border-box; }
 
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+      /* Kein grauer/blauer Tipp-Flash auf iOS/Android */
+      -webkit-tap-highlight-color: transparent;
+      /* Keine Schrift-Aufblaehung im Querformat */
+      -webkit-text-size-adjust: 100%;
+    }
+
+    /* 300ms-Tipp-Verzoegerung aufheben; betrifft nicht die Textauswahl */
+    a, button { touch-action: manipulation; }
+
+    /* Lang-Druck markiert keinen Text/zeigt kein Callout-Menue auf reinen
+       Steuerelementen. Kontaktdaten (Telefon/E-Mail in Fusszeile und Kontakt-
+       block) bleiben bewusst auswaehlbar - die will man kopieren koennen. */
+    .btn, .nav-cta, .lang, .nav-ham, .links a, .nav-drawer a {
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
 
     body {
       margin: 0;
@@ -215,7 +234,10 @@
       width: 44px; height: 44px; padding: 0;
       border: 1.5px solid var(--line); border-radius: 10px;
       background: transparent; cursor: pointer;
+      transition: transform .15s var(--ease), border-color .2s;
     }
+
+    .nav-ham:active { transform: scale(.94); }
 
     .nav-ham span {
       display: block; height: 2px; width: 18px; margin-inline: auto;
@@ -839,6 +861,9 @@
     @media (hover: hover) and (pointer: fine) {
       .links a.hide-sm:hover::after { transform: scaleX(1); }
       .lang:hover { border-color: var(--ink); }
+
+    .lang { transition: border-color .2s, transform .15s var(--ease); }
+    .lang:active { transform: scale(.96); }
       .nav-cta:hover { background: var(--ink); color: var(--stone); }
       .btn:hover { transform: translateY(-3px); box-shadow: var(--e2); }
       .btn.clay:hover { background: var(--clay-soft); border-color: var(--clay-soft); }

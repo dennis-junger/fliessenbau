@@ -71,6 +71,7 @@
       --e3: 0 24px 60px -24px rgba(20, 23, 26, .5);
 
       --ease: cubic-bezier(.22, 1, .36, 1);
+      --ease-in-out: cubic-bezier(.77, 0, .175, 1);
       --dur: .5s;
 
       /* Eintritts-Animation */
@@ -315,6 +316,28 @@
     @keyframes reveal-in {
       from { opacity: 0; transform: translateY(22px); }
       to { opacity: 1; transform: none; }
+    }
+
+    /* Foto-Panels: Clip-Path-Reveal statt Fade+Verschiebung. Wirkt wie ein
+       Vorhang, der sich hebt, statt wie ein Objekt, das einfliegt - passend
+       fuer reine Bildflaechen. Nur einmalig, keine Keyframes noetig: eine
+       Transition auf clip-path reicht, die generische .reveal.in-Animation
+       wird per Spezifitaet uebersteuert. Geclippt wird das <img> im Innern,
+       nicht das beobachtete .hero-frame-Element selbst: ein Element, das
+       sich per clip-path komplett selbst wegclippt, zaehlt fuer Chromiums
+       IntersectionObserver offenbar als nicht sichtbar und der Observer
+       feuert nie - gemessen, nicht vermutet. Unter reduzierter Bewegung
+       entfaellt automatisch nur die Animation der Transition (siehe unten),
+       nicht das Erscheinen selbst. */
+    .js .hero-frame.reveal { opacity: 1; }
+
+    .js .hero-frame.reveal img {
+      clip-path: inset(0 0 100% 0);
+      transition: clip-path .6s var(--ease-in-out);
+    }
+
+    .hero-frame.reveal.in img {
+      clip-path: inset(0 0 0% 0);
     }
 
     @media (prefers-reduced-motion: reduce) {
